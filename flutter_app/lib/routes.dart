@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/screens/test_screen.dart';
+import 'package:flutter_app/main.dart';
 
 class Routes {
   static const String home = '/';
@@ -8,9 +8,9 @@ class Routes {
 
   static Map<String, WidgetBuilder> getRoutes() {
     return {
-      home: (context) => const TestScreen(),
-      login: (context) => const TestScreen(),
-      settings: (context) => const TestScreen(),
+      home: (context) => Chatgptouille(),
+      login: (context) => Chatgptouille(),
+      settings: (context) => Chatgptouille(),
     };
   }
 }
