@@ -9,7 +9,7 @@ from starlette.responses import Response
 
 from pydantic import ValidationError
 
-from .routers import pizza_router
+from .routers import users_router
 
 app = FastAPI()
 
@@ -26,7 +26,7 @@ app.add_middleware(
 )
 
 
-app.include_router(pizza_router.router)
+app.include_router(users_router.router)
 
 
 @app.exception_handler(RequestValidationError)
@@ -43,4 +43,4 @@ def read_root():
     """
     Racine de l'API
     """
-    return {"message": "Pizzas API"}
+    return {"message": "ChatGPTouille API"}
