@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/screens/home/homepage.dart';
-
+import 'screens/pages_navbar.dart';
 
 void main() {
   runApp(const Chatgptouille());
@@ -14,7 +13,7 @@ class Chatgptouille extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: NavBarPages(),
     );
   }
 }
