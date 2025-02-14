@@ -1,3 +1,6 @@
+from .routers import recipes_router
+from .routers import users_router
+
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import PlainTextResponse, JSONResponse
@@ -9,7 +12,6 @@ from starlette.responses import Response
 
 from pydantic import ValidationError
 
-from .routers import users_router
 
 app = FastAPI()
 
@@ -27,6 +29,7 @@ app.add_middleware(
 
 
 app.include_router(users_router.router)
+app.include_router(recipes_router.router)
 
 
 @app.exception_handler(RequestValidationError)

@@ -1,9 +1,0 @@
-{
-  "version": "1",
-  "name": "ChatGPTouille API Python",
-  "type": "collection",
-  "ignore": [
-    "node_modules",
-    ".git"
-  ]
-}
