@@ -9,8 +9,14 @@ class ProfilePage extends StatefulWidget {
 }
 
 class ProfilePageState extends State<ProfilePage> {
+  //Fonction qui indique ce qu'il faut faire si le bouton "sign out" est appuyé
+  void pressedDeco (){
+
+  }
+
+
   // Liste des boutons avec chemins des icônes et textes
-  final List<Map<String, String>> buttons_diet = [
+  final List<Map<String, String>> buttonDiet = [
     {
       "icon": "assets/images/icon_carrot.png",
       "selectedIcon": "assets/images/icon_carrot_selected.png",
@@ -45,7 +51,7 @@ class ProfilePageState extends State<ProfilePage> {
 
   List<bool> selectedButtonsDiet = List.generate(6, (index) => false);
 
-  final List<Map<String, String>> buttons_equipement = [
+  final List<Map<String, String>> buttonsEquipement = [
     {
       "icon": "assets/images/icon_microwave.png",
       "selectedIcon": "assets/images/icon_microwave_selected.png",
@@ -88,7 +94,7 @@ class ProfilePageState extends State<ProfilePage> {
           child: ConstrainedBox(
             constraints: BoxConstraints(
               maxWidth:
-                  400, // ✅ Largeur maximale pour éviter l'étirement sur grands écrans
+                  400, // Largeur maximale pour éviter l'étirement sur grands écrans
             ),
             child: Padding(
               padding: const EdgeInsets.all(40.0),
@@ -129,7 +135,7 @@ class ProfilePageState extends State<ProfilePage> {
                   SizedBox(
                     width: 360.0,
                     height: 50.0,
-                    child: ButtonGeneric(content: "Sign out"),
+                    child: ButtonGeneric(content: "Sign out", pressedFunction: pressedDeco),
                   ),
 
                   const SizedBox(height: 20),
@@ -153,11 +159,11 @@ class ProfilePageState extends State<ProfilePage> {
 
                   const SizedBox(height: 10),
 
-                  // ✅ Liste des boutons scrollables
+                  //Liste des boutons scrollables
                   Wrap(
                     spacing: 10.0,
                     runSpacing: 10.0,
-                    children: List.generate(buttons_diet.length, (index) {
+                    children: List.generate(buttonDiet.length, (index) {
                       return GestureDetector(
                         onTap: () {
                           setState(() {
@@ -183,14 +189,14 @@ class ProfilePageState extends State<ProfilePage> {
                             children: [
                               Image.asset(
                                 selectedButtonsDiet[index]
-                                    ? buttons_diet[index]["selectedIcon"]!
-                                    : buttons_diet[index]["icon"]!,
+                                    ? buttonDiet[index]["selectedIcon"]!
+                                    : buttonDiet[index]["icon"]!,
                                 width: 40,
                                 height: 40,
                               ),
                               const SizedBox(height: 5),
                               Text(
-                                buttons_diet[index]["text"]!,
+                                buttonDiet[index]["text"]!,
                                 style: TextStyle(
                                   color: selectedButtonsDiet[index]
                                       ? const Color(0xFFFE724C)
@@ -222,7 +228,7 @@ class ProfilePageState extends State<ProfilePage> {
                   Wrap(
                     spacing: 10.0,
                     runSpacing: 10.0,
-                    children: List.generate(buttons_equipement.length, (index) {
+                    children: List.generate(buttonsEquipement.length, (index) {
                       return GestureDetector(
                         onTap: () {
                           setState(() {
@@ -248,14 +254,14 @@ class ProfilePageState extends State<ProfilePage> {
                             children: [
                               Image.asset(
                                 selectedButtonsEquipement[index]
-                                    ? buttons_equipement[index]["selectedIcon"]!
-                                    : buttons_equipement[index]["icon"]!,
+                                    ? buttonsEquipement[index]["selectedIcon"]!
+                                    : buttonsEquipement[index]["icon"]!,
                                 width: 40,
                                 height: 40,
                               ),
                               const SizedBox(height: 5),
                               Text(
-                                buttons_equipement[index]["text"]!,
+                                buttonsEquipement[index]["text"]!,
                                 style: TextStyle(
                                   color: selectedButtonsEquipement[index]
                                       ? const Color(0xFFFE724C)

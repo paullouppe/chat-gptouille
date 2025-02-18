@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 class ButtonGeneric extends StatelessWidget {
-  //fonction qui change la couleur selon l'item sélectionné
+  
   final String content;
+  //Fonction qui est utilisé quand le bouton est cliqué
+  final VoidCallback pressedFunction; 
 
-  const ButtonGeneric({super.key, required this.content});
+  const ButtonGeneric({super.key, required this.content, required this.pressedFunction });
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
-        // Button onPressed action
-      },
+      onPressed: pressedFunction,
       style: ButtonStyle(
           backgroundColor: WidgetStatePropertyAll<Color>(Color((0xFFFE724C))),
           shape: WidgetStateProperty.all<RoundedRectangleBorder>(
