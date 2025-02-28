@@ -16,28 +16,24 @@ router = APIRouter(
 # Pydantic Schemas for Recipes
 # -------------------------------
 class RecipeBase(BaseModel):
-    name: str
-    minutes: int
-    steps: List[str]
-    description: str
-    ingredients: List[str]
-
-class RecipeCreate(RecipeBase):
-    pass
-
-class RecipeUpdate(BaseModel):
     name: Optional[str] = None
     minutes: Optional[int] = None
     steps: Optional[List[str]] = None
     description: Optional[str] = None
     ingredients: Optional[List[str]] = None
 
+class RecipeCreate(RecipeBase):
+    pass
+
+class RecipeUpdate(RecipeBase):
+    pass
+
 class RecipeOut(RecipeBase):
     id: int
-    created_at: datetime
+    created_at: Optional[datetime] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # -------------------------------
 # CRUD Endpoints for Recipes
@@ -58,8 +54,22 @@ def create_recipe(recipe: RecipeCreate, db: Session = Depends(get_db)):
 
 @router.get("/", response_model=List[RecipeOut])
 def get_all_recipes(db: Session = Depends(get_db)):
-    recipes = db.query(Recipe).all()
-    return recipes
+    try:
+        recipes = db.query(Recipe).all()
+        if not recipes:
+            return []
+        
+        # Add logging to see what we're getting from the database
+        for recipe in recipes:
+            if recipe.name is None:
+                print(f"Warning: Recipe with ID {recipe.id} has None name")
+            if recipe.description is None:
+                print(f"Warning: Recipe with ID {recipe.id} has None description")
+        
+        return recipes
+    except Exception as e:
+        print(f"Error in get_all_recipes: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/{id}", response_model=RecipeOut)
 def get_recipe(id: int, db: Session = Depends(get_db)):
@@ -74,12 +84,8 @@ def update_recipe(id: int, updated_recipe: RecipeCreate, db: Session = Depends(g
     if not recipe:
         raise HTTPException(status_code=404, detail="Recipe not found")
     
-    # Full update
-    recipe.name = updated_recipe.name
-    recipe.minutes = updated_recipe.minutes
-    recipe.steps = updated_recipe.steps
-    recipe.description = updated_recipe.description
-    recipe.ingredients = updated_recipe.ingredients
+    for key, value in updated_recipe.dict(exclude_unset=True).items():
+        setattr(recipe, key, value)
 
     db.commit()
     db.refresh(recipe)
@@ -91,16 +97,9 @@ def partial_update_recipe(id: int, recipe_update: RecipeUpdate, db: Session = De
     if not recipe:
         raise HTTPException(status_code=404, detail="Recipe not found")
     
-    if recipe_update.name is not None:
-        recipe.name = recipe_update.name
-    if recipe_update.minutes is not None:
-        recipe.minutes = recipe_update.minutes
-    if recipe_update.steps is not None:
-        recipe.steps = recipe_update.steps
-    if recipe_update.description is not None:
-        recipe.description = recipe_update.description
-    if recipe_update.ingredients is not None:
-        recipe.ingredients = recipe_update.ingredients
+    for key, value in recipe_update.dict(exclude_unset=True).items():
+        if value is not None:
+            setattr(recipe, key, value)
 
     db.commit()
     db.refresh(recipe)

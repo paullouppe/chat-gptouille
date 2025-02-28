@@ -6,9 +6,9 @@ class Recipe(Base):
     __tablename__ = "recipes"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    name = Column(String, nullable=False, unique=True)
-    minutes = Column(Integer, nullable=False)
-    created_at = Column(DateTime, server_default=func.now(), nullable=False)
-    steps = Column(ARRAY(String), nullable=False)
-    description = Column(Text, nullable=False)
-    ingredients = Column(ARRAY(String), nullable=False)
+    name = Column(String, nullable=True)
+    minutes = Column(Integer, nullable=True)
+    created_at = Column(DateTime, server_default=func.now(), nullable=True)
+    steps = Column(ARRAY(String), nullable=True)
+    description = Column(Text, nullable=True)
+    ingredients = Column(ARRAY(String), nullable=True)
