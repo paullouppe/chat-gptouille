@@ -1,5 +1,3 @@
-
-
 ## Stack technologique
 
 - Langage de programmation : Python 3.10

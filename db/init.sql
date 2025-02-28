@@ -1,7 +1,20 @@
 -- init.sql
 
--- 1. Create a temporary staging table to load the CSV data.
---    (The staging table has all columns as text so we can transform them as needed.)
+-- First, connect to the correct database
+\c recipe;
+
+-- Create the recipes table first
+CREATE TABLE IF NOT EXISTS recipes (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR,
+    minutes INTEGER,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    steps TEXT[],
+    description TEXT,
+    ingredients TEXT[]
+);
+
+-- Create the staging table
 CREATE TEMP TABLE staging_recipes (
     dummy text,
     name text,
@@ -18,30 +31,23 @@ CREATE TEMP TABLE staging_recipes (
     n_ingredients text
 );
 
--- 2. Load the CSV file into the staging table.
---    Adjust the file path below to the location of your CSV file.
---    If running from psql locally, you might use \copy instead.
+-- Load the CSV data
 COPY staging_recipes
-FROM './db/recipes.csv'
+FROM '/db/recipes.csv'
 CSV HEADER;
 
--- 3. Insert data into the recipes table with necessary transformations.
---    We convert the steps and ingredients strings into PostgreSQL array literals.
+-- Insert the data with better array handling
 INSERT INTO recipes (name, minutes, steps, description, ingredients)
 SELECT
     name,
     CAST(minutes AS integer),
-    REPLACE(
-      REPLACE(
-        REPLACE(steps, '[', '{'),
-      ']', '}'),
-    '''', '"'
-    )::text[],
+    string_to_array(
+        trim(both '[]' from replace(replace(steps, '"', ''''), '''', '"')),
+        '", "'
+    ),
     description,
-    REPLACE(
-      REPLACE(
-        REPLACE(ingredients, '[', '{'),
-      ']', '}'),
-    '''', '"'
-    )::text[]
+    string_to_array(
+        trim(both '[]' from replace(replace(ingredients, '"', ''''), '''', '"')),
+        '", "'
+    )
 FROM staging_recipes;

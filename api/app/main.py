@@ -11,9 +11,13 @@ from starlette.responses import Response
 
 
 from pydantic import ValidationError
+from .database import init_db
 
 
 app = FastAPI()
+
+# Initialize database tables
+init_db()
 
 app.add_middleware(
     CORSMiddleware,
