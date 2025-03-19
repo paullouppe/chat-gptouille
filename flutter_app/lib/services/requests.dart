@@ -1,4 +1,7 @@
+import 'dart:async';
+import 'dart:convert';
 import 'package:dio/dio.dart';
+
 // Requête POST
 Future<String> postRequest(Map<String, dynamic> data,String apiUrl) async {
 
@@ -33,6 +36,24 @@ Future<String> postRequest(Map<String, dynamic> data,String apiUrl) async {
   }
 }
 
+Future<Stream<String>> streamRequest(Map<String, dynamic> data, String apiUrl) async {
+  Dio dio = Dio();
+  try {
+    // Set the response type to stream.
+    Response<ResponseBody> response = await dio.post<ResponseBody>(
+      apiUrl,
+      data: data,
+      options: Options(responseType: ResponseType.stream),
+    );
 
-
-// Requête GET
+    if (response.statusCode == 200) {
+      Stream<String> stream = utf8.decoder.bind(response.data!.stream).transform(LineSplitter());
+      return stream;
+    } else {
+      throw Exception("Réponse inattendue : ${response.statusCode}");
+    }
+  } catch (e) {
+    print("Erreur lors de la requête en streaming : $e");
+    rethrow;
+  }
+}
