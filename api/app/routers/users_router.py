@@ -47,6 +47,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
 # -------------------------------------------------
 class UserBase(BaseModel):
     mail: str
+    name: str
 
 class UserCreate(UserBase):
     name: str
@@ -82,7 +83,7 @@ def signup(user: UserCreate, db: Session = Depends(get_db)):
     
     # Create a new user with a hashed password.
     hashed_password = get_password_hash(user.password)
-    new_user = User(name=user.mail, mail=user.mail, password=hashed_password)
+    new_user = User(name=user.name, mail=user.mail, password=hashed_password)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)

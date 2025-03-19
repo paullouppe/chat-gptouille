@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
 
+
+class EmailInputWidget extends StatefulWidget {
+  final TextEditingController controllerMail; // Permet de récupérer la valeur
+  final TextEditingController controllerPassw ; 
+
+  const EmailInputWidget({super.key, required this.controllerMail, required this.controllerPassw});
+
+  @override
+  State<EmailInputWidget> createState() => _EmailInputWidgetState();
+}
+
+
 //Classe contenant les champs de texte nécessaires pour le login et le signup (mot de passe et mail)
-class EmailInputLogin extends StatelessWidget {
-  const EmailInputLogin({super.key});
+class _EmailInputWidgetState extends State<EmailInputWidget> {
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +33,7 @@ class EmailInputLogin extends StatelessWidget {
         ),
         SizedBox(height: 10),
         TextField(
+          controller : widget.controllerMail,
           decoration: InputDecoration(
             hintText: 'Your email',
             hintStyle: TextStyle(color: Colors.grey[400]), 
@@ -52,7 +64,7 @@ class EmailInputLogin extends StatelessWidget {
           ),
         ),
         SizedBox(height: 10),
-        PasswordInputLogin()
+        PasswordInputLogin(controller: widget.controllerPassw),
       ],
     ));
   }
@@ -60,7 +72,9 @@ class EmailInputLogin extends StatelessWidget {
 
 //Classe contenant le champ de texte pour le mot de passe
 class PasswordInputLogin extends StatefulWidget {
-  const PasswordInputLogin({super.key});
+  final TextEditingController controller;
+  const PasswordInputLogin({super.key, required this.controller});
+  
 
   @override
   PasswordInputLoginState createState() => PasswordInputLoginState();
@@ -73,6 +87,7 @@ class PasswordInputLoginState extends State<PasswordInputLogin> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: widget.controller,
       obscureText: _showText,  
       decoration: InputDecoration(
         hintText: 'Enter your password',

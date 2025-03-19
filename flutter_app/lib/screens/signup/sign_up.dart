@@ -2,14 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/signin/login_page.dart';
 import 'package:flutter_app/screens/widgets/button.dart';
 import 'package:flutter_app/screens/widgets/login_bar.dart';
+import 'package:flutter_app/services/requests.dart';
 
 //Page de création de compte
 class SignUpPage extends StatelessWidget {
-  const SignUpPage({super.key});
+  SignUpPage({super.key});
+
+  final TextEditingController fullNameController = TextEditingController();
+  final TextEditingController mailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   //Fonction qui indique ce qu'il se passe quand on appuie sur le bouton "signup"
-  void pressSignup(){
-
+  Future<void> pressSignup(BuildContext context) async {
+    //1ère étape = récupérer les infos du full name, de mail et de password
+    String fullName = fullNameController.text;
+    String mail = mailController.text; 
+    String password = passwordController.text;
+    //puis donner à l'API 
+    Map<String, dynamic> userData = {
+    "mail": mail,
+    "name": fullName,
+    "password":password,
+    };
+    String apiUrl = "http://localhost:8080/users/signup"; 
+    //si la réponse est bonne de l'API, on met un petit alert
+    String response=await postRequest(userData, apiUrl);
+    if (response!="problem" && response!="mail already exists"){
+      _showSuccessSignUp(context);
+    }
+    //Si le mail existe déjà, on demande de réessayer avec un autre mail
+    else if (response=="mail already exists"){
+      _showTryAgainSignUp(context);
+    }
+    //s"il y a un problème, on demande de réessayer plus tard.
+    else{
+      _showProblemSignUp(context);
+    }
+    
   }
 
 
@@ -57,11 +86,11 @@ class SignUpPage extends StatelessWidget {
               //Champs de texte nécessaires pour la création de compte
               Column(
                   children: [
-                    FullNameWidget(),
+                    FullNameWidget(controller: fullNameController),
                     SizedBox(height: 30),
-                    EmailInputLogin(),
+                    EmailInputWidget(controllerMail: mailController, controllerPassw: passwordController,),
                     SizedBox(height: 50),
-                    ButtonGeneric(content: "SIGN UP", pressedFunction: pressSignup),
+                    ButtonGeneric(content: "SIGN UP", pressedFunction: () {pressSignup(context);},),
                     SizedBox(height: 40),
                 ]   
               ),
@@ -87,11 +116,19 @@ class SignUpPage extends StatelessWidget {
   }
 }
 
+class FullNameWidget extends StatefulWidget {
+  final TextEditingController controller; // Permet de récupérer la valeur
+
+  const FullNameWidget({super.key, required this.controller});
+
+  @override
+  State<FullNameWidget> createState() => _FullNameWidgetState();
+}
+
 
 //Classe contenant le champ de texte pour obtenir le full name
-class FullNameWidget extends StatelessWidget {
-  const FullNameWidget({super.key});
-
+class _FullNameWidgetState extends State<FullNameWidget> {
+  
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -111,6 +148,7 @@ class FullNameWidget extends StatelessWidget {
       SizedBox(
       width: 300,
         child:TextField(
+          controller: widget.controller,
           decoration: InputDecoration(
             hintText: 'Full Name',
             hintStyle: TextStyle(color: Colors.grey[400]), 
@@ -135,4 +173,70 @@ class FullNameWidget extends StatelessWidget {
     ),
     );
     }
+}
+
+
+void _showSuccessSignUp(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Account created"),
+        content: Text("Your account was created! You need to connect to confirm your identity."),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Fermer l'alerte
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => LoginPage()),
+              ); // Aller vers la page de connexion
+            },
+            child: Text("OK"),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void _showTryAgainSignUp(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Mail already exists"),
+        content: Text("This mail is already used for another profile. Consider using another email, or connect with your current email."),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Fermer l'alerte
+            },
+            child: Text("OK"),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
+void _showProblemSignUp(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Current problem"),
+        content: Text("Our application has currently a problem. Please try to sign up after a few hours."),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Fermer l'alerte
+            },
+            child: Text("OK"),
+          ),
+        ],
+      );
+    },
+  );
 }

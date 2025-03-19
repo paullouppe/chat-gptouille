@@ -22,7 +22,7 @@ class NavBar extends StatelessWidget {
         BottomNavigationBarItem(icon: Icon(Icons.explore), label: "Explore"),
         BottomNavigationBarItem(icon: Icon(Icons.chat), label: "Chatbot"),
         BottomNavigationBarItem(
-            icon: Icon(Icons.favorite), label: "Your recipes"),
+            icon: Icon(Icons.add_box), label: "Add recipe"),
         BottomNavigationBarItem(
             icon: Icon(Icons.account_circle_outlined), label: "Profile"),
       ],

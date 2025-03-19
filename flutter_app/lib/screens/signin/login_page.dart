@@ -58,7 +58,7 @@ class LoginPage extends StatelessWidget {
               //Champs de texte pour la connexion
               Column(
                   children: [
-                    EmailInputLogin(),
+                    //EmailInputWidget(),
                     SizedBox(height: 50),
                     ButtonGeneric(content: "LOGIN", pressedFunction: pressLogin),
                     SizedBox(height: 40),
@@ -67,7 +67,7 @@ class LoginPage extends StatelessWidget {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const SignUpPage()),
+                          MaterialPageRoute(builder: (context) => SignUpPage()),
                         );
                       },
                       child: Text(
