@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, Text, func
 from sqlalchemy.dialects.postgresql import ARRAY
+from pgvector.sqlalchemy import Vector  
 from ..database import Base
 
 class Recipe(Base):
@@ -12,3 +13,4 @@ class Recipe(Base):
     steps = Column(ARRAY(String), nullable=True)
     description = Column(Text, nullable=True)
     ingredients = Column(ARRAY(String), nullable=True)
+    embedding = Column(Vector(384), nullable=True)

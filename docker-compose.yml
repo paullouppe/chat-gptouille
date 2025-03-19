@@ -19,7 +19,7 @@ services:
           target: /code
 
   db:
-    image: postgres:13-alpine
+    image: ankane/pgvector
     user: postgres
     env_file:
       - ./db/.env

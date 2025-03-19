@@ -1,8 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
-from typing import List, Optional
-from datetime import datetime
+from fastapi.responses import StreamingResponse
 
 from ..services.rag import RAG
 from ..db import get_db
@@ -28,8 +27,6 @@ def load(db: Session = Depends(get_db)):
 
 
 @router.post("/")
-def chat(request: ChatRequest, db: Session = Depends(get_db)):
-    user_message = request.user_message
-    response_stream = rag.ask(user_message)
-
-    return {"response": response_stream}
+async def chat(request: ChatRequest, db: Session = Depends(get_db)):
+    generator = rag.ask(request.user_message, db)
+    return StreamingResponse(generator, media_type="text/plain")

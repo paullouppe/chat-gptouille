@@ -9,3 +9,4 @@ ollama
 numpy
 scikit-learn
 tqdm
+pgvector
