@@ -5,7 +5,6 @@ services:
       - ./api/app:/code/app
     ports:
       - 8080:80
-      - 11434:11434
     env_file:
       - ./api/.env
     depends_on:

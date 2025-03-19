@@ -1,5 +1,6 @@
 import asyncio
 import ollama
+from ollama import Client
 import numpy as np
 import os
 from tqdm import tqdm
@@ -18,8 +19,12 @@ Your output should be short and containing the title of the proposed recipe, its
 Context:\n
 """
 
+client = Client(
+    host='http://host.docker.internal:11434/'
+)
+
 def embed(query):
-    return ollama.embeddings(model=EMBEDDING_MODEL_NAME, prompt=query).embedding
+    return client.embeddings(model=EMBEDDING_MODEL_NAME, prompt=query).embedding
 
 def load_or_build_embeddings_from_recipes(embedding_path, recipes):
     if os.path.exists(embedding_path):
@@ -79,7 +84,7 @@ def _ollama_stream(query, embeddings, recipes):
         ]
     )
 
-    response = ollama.chat(
+    response = client.chat(
         model=CONVERSATIONAL_MODEL_NAME,
         messages=[
             {"role": "system", "content": system_msg},
