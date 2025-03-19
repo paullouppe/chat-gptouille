@@ -49,6 +49,8 @@ class UserBase(BaseModel):
     mail: str
 
 class UserCreate(UserBase):
+    name: str
+    mail: str
     password: str
 
 class UserLogin(BaseModel):
@@ -80,7 +82,7 @@ def signup(user: UserCreate, db: Session = Depends(get_db)):
     
     # Create a new user with a hashed password.
     hashed_password = get_password_hash(user.password)
-    new_user = User(mail=user.mail, password=hashed_password)
+    new_user = User(name=user.mail, mail=user.mail, password=hashed_password)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
