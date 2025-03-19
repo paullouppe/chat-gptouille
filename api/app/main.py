@@ -1,5 +1,6 @@
 from .routers import recipes_router
 from .routers import users_router
+from .routers import chatbot_router
 
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
@@ -34,6 +35,7 @@ app.add_middleware(
 
 app.include_router(users_router.router)
 app.include_router(recipes_router.router)
+app.include_router(chatbot_router.router)
 
 
 @app.exception_handler(RequestValidationError)
