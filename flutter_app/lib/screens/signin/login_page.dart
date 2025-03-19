@@ -1,18 +1,58 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_app/screens/pages_navbar.dart';
+import 'package:flutter_app/screens/signin/provider_user.dart';
 import 'package:flutter_app/screens/signup/sign_up.dart';
+import 'package:flutter_app/screens/widgets/alert_dialog.dart';
 import 'package:flutter_app/screens/widgets/button.dart';
+import 'package:flutter_app/services/requests.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/login_bar.dart';
 
 //Classe contenant la page de login
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+  LoginPage({super.key});
+
+  //Controllers contenant les infos pour la connexion
+  final TextEditingController mailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   //Fonction qui indique ce qu'il se passe quand on appuie sur le bouton "login"
-  void pressLogin(){
-
+  void pressLogin(BuildContext context) async{
+    //1ère étape = récupérer les infos de mail et de password
+    String mail = mailController.text; 
+    String password = passwordController.text;
+    //puis donner à l'API 
+    Map<String, dynamic> userData = {
+    "mail": mail,
+    "password":password,
+    };
+    String apiUrl = "http://localhost:8080/users/login"; 
+    //si la réponse est bonne de l'API, on connecte et on passe à la page principale
+    String response=await postRequest( userData, apiUrl);
+    
+    if (response!="problem" && response!="Invalid email or password"){
+      //On retransforme le string en json
+      Map<String, dynamic> userLoggedData = jsonDecode(response);
+      //Et on instancie un provider pour utiliser les informations dans toutes les pages
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      userProvider.setUser(userLoggedData['access_token'], userLoggedData["name"], userLoggedData["id"]);
+      Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => NavBarPages()),
+              ); 
+    }
+    //Si le mot de passe est incorrect, message d'alerte
+    else if (response=="Invalid email or password"){
+      _showTryAgainLogin(context);
+    }
+    //s'il y a un problème, on demande de réessayer plus tard.
+    else{
+      AlertDialogProblem();
+    }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +98,9 @@ class LoginPage extends StatelessWidget {
               //Champs de texte pour la connexion
               Column(
                   children: [
-                    //EmailInputWidget(),
+                    EmailInputWidget(controllerMail: mailController, controllerPassw: passwordController,),
                     SizedBox(height: 50),
-                    ButtonGeneric(content: "LOGIN", pressedFunction: pressLogin),
+                    ButtonGeneric(content: "LOGIN", pressedFunction: () {pressLogin(context);},),
                     SizedBox(height: 40),
                     //TextButton pour aller sur la page de création de compte
                     TextButton(
@@ -85,3 +125,26 @@ class LoginPage extends StatelessWidget {
     );
   }
 }
+
+
+void _showTryAgainLogin(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Invalid mail or password."),
+        content: Text("Try again to find your password or email."),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Fermer l'alerte
+            },
+            child: Text("OK"),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+

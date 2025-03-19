@@ -13,8 +13,10 @@ Future<String> postRequest(Map<String, dynamic> data,String apiUrl) async {
     );
 
     if (response.statusCode == 200) {
+      
       print("Requête post réussie : ${response.data}");
-      return "success";
+      //Il faut retourner un string tout en gardant une structure json correcte
+      return jsonEncode(response.data);
     } else {
       print("Réponse inattendue : ${response.data}");
     }
@@ -26,13 +28,50 @@ Future<String> postRequest(Map<String, dynamic> data,String apiUrl) async {
       if (e.response?.statusCode == 400) {
         return "mail already exists";
       }
+      else if (e.response?.statusCode == 401) {
+        return "Invalid email or password";
+      }
       return "problem";
     } else {
-      print("Erreur de connexion à l'API : $e");
-      
+      print("Erreur de connexion à l'API : $e"); 
       return "problem";
     }
     
+  }
+}
+
+
+// Requête DELETE
+
+Future<String> deleteAccountRequest (String accessToken, String apiUrl) async {
+  Dio dio = Dio();
+
+  try {
+    // Définir les en-têtes avec le token d'accès
+    dio.options.headers = {
+      'Authorization': 'Bearer $accessToken',  // Ajouter le token JWT
+    };
+
+    // Effectuer la requête DELETE
+    Response response = await dio.delete(apiUrl);
+
+    if (response.statusCode == 200) {
+      // Suppression réussie
+      return "success";
+    } else {
+      // Autre réponse HTTP
+      return "Erreur lors de la suppression du compte: ${response.statusCode}";
+    }
+  } catch (e) {
+    if (e is DioException) {
+      // Gérer les erreurs spécifiques de Dio
+      print("Erreur API : ${e.response?.statusCode} - ${e.response?.data}");
+      return "Erreur de l'API lors de la suppression du compte";
+    } else {
+      // Autres erreurs générales
+      print("Erreur de connexion : $e");
+      return "Erreur lors de la connexion à l'API";
+    }
   }
 }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/signin/login_page.dart';
+import 'package:flutter_app/screens/widgets/alert_dialog.dart';
 import 'package:flutter_app/screens/widgets/button.dart';
 import 'package:flutter_app/screens/widgets/login_bar.dart';
 import 'package:flutter_app/services/requests.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_app/services/requests.dart';
 class SignUpPage extends StatelessWidget {
   SignUpPage({super.key});
 
+  //Controller contenant les infos textuelles récupérées pour la question de compte
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController mailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -34,11 +36,10 @@ class SignUpPage extends StatelessWidget {
     else if (response=="mail already exists"){
       _showTryAgainSignUp(context);
     }
-    //s"il y a un problème, on demande de réessayer plus tard.
+    //s'il y a un problème, on demande de réessayer plus tard.
     else{
-      _showProblemSignUp(context);
+      AlertDialogProblem();
     }
-    
   }
 
 
@@ -99,7 +100,7 @@ class SignUpPage extends StatelessWidget {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const LoginPage()),
+                          MaterialPageRoute(builder: (context) => LoginPage()),
                         );
                       },
                       child: Text(
@@ -221,22 +222,3 @@ void _showTryAgainSignUp(BuildContext context) {
 }
 
 
-void _showProblemSignUp(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text("Current problem"),
-        content: Text("Our application has currently a problem. Please try to sign up after a few hours."),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(); // Fermer l'alerte
-            },
-            child: Text("OK"),
-          ),
-        ],
-      );
-    },
-  );
-}

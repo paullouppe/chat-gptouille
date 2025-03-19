@@ -6,6 +6,7 @@ import 'dart:math';
 
 //Classe qui donne le contenu de la Homepage sans prendre en considératiion le navigation bar qui est traité à part.
 //(c'est là où on construit la page, pas au dessus)
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
@@ -157,7 +158,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-    );
+    ));
   }
 }
 

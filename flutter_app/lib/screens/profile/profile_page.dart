@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/screens/signin/login_page.dart';
+import 'package:flutter_app/screens/signin/provider_user.dart';
+import 'package:flutter_app/screens/signup/sign_up.dart';
+import 'package:flutter_app/screens/widgets/alert_dialog.dart';
 import 'package:flutter_app/screens/widgets/button.dart';
+import 'package:flutter_app/services/requests.dart';
 import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:flutter_app/theme/theme_provider.dart';
 import 'package:flutter_app/theme/theme.dart';
+
+
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -14,8 +21,17 @@ class ProfilePage extends StatefulWidget {
 
 class ProfilePageState extends State<ProfilePage> {
   //Fonction qui indique ce qu'il faut faire si le bouton "sign out" est appuyé
-  void pressedDeco() {}
-  void pressedDelete() {}
+  void pressedDeco() {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    userProvider.logout();
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+    );
+  }
+  void pressedDelete() {
+    _showConfirmationSuppression(context);
+  }
 
   // Liste des boutons avec chemins des icônes et textes
   final List<Map<String, String>> buttonDiet = [
@@ -91,6 +107,7 @@ class ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -121,7 +138,7 @@ class ProfilePageState extends State<ProfilePage> {
                             style: Theme.of(context).textTheme.headlineLarge,
                           ),
                           Text(
-                            'Paul Louppe',
+                            userProvider.name,
                             style: TextStyle(
                                 fontSize: 28,
                                 fontWeight: FontWeight.bold,
@@ -333,3 +350,72 @@ class ProfilePageState extends State<ProfilePage> {
     );
   }
 }
+
+Future<void> deleteAccount(context) async {
+  final userProvider = Provider.of<UserProvider>(context, listen: false);
+  String apiUrl = "http://localhost:8080/users/${userProvider.id}";
+  String access_token = userProvider.accessToken;
+  String result = await deleteAccountRequest(access_token, apiUrl);
+  if (result=="success"){
+    _showSuccessSuppression(context);
+  }
+  else{
+    AlertDialogProblem();
+  }
+}
+
+
+void _showConfirmationSuppression(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Are you sure?"),
+        content: Text("Are you sure you want to delete your account ? This action is irreversible. You will loose all your data and recipes. Do you still want to delete ?"),
+        actions: <Widget>[
+          //Annuler l'action de suppression
+          TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(); //fermer l'alert dialog
+          },
+          child: const Text("No, I don't want to delete"),
+        ),
+        //Confirmer la suppression
+        TextButton(
+          onPressed: () {
+            deleteAccount(context); // Appeler la fonction de suppression
+            Navigator.of(context).pop(); // Fermer le dialog
+          },
+          child: const Text('Yes, delete my account.'),
+        ),
+        ],
+      );
+    },
+  );
+}
+
+
+void _showSuccessSuppression(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Your account is successfully deleted"),
+        content: Text("Your account has been deleted. Don't hesitate to join us again by creating another account!"),
+        actions:[
+        TextButton(
+          onPressed: () {// Appeler la fonction de suppression
+            Navigator.of(context).pop(); // Fermer le dialog
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => SignUpPage()),
+              ); // Aller vers la page de création de compte
+          },
+          child: const Text('OK'),
+        ),
+        ],
+      );
+    },
+  );
+}
+
