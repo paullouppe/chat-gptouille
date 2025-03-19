@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/widgets/button.dart';
+import 'package:provider/provider.dart';
+import 'package:toggle_switch/toggle_switch.dart';
+import 'package:flutter_app/theme/theme_provider.dart';
+import 'package:flutter_app/theme/theme.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -10,10 +14,8 @@ class ProfilePage extends StatefulWidget {
 
 class ProfilePageState extends State<ProfilePage> {
   //Fonction qui indique ce qu'il faut faire si le bouton "sign out" est appuyé
-  void pressedDeco (){
-
-  }
-
+  void pressedDeco() {}
+  void pressedDelete() {}
 
   // Liste des boutons avec chemins des icônes et textes
   final List<Map<String, String>> buttonDiet = [
@@ -88,6 +90,7 @@ class ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -129,15 +132,6 @@ class ProfilePageState extends State<ProfilePage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
-
-                  // Bouton "Sign out"
-                  SizedBox(
-                    width: 360.0,
-                    height: 50.0,
-                    child: ButtonGeneric(content: "Sign out", pressedFunction: pressedDeco),
-                  ),
-
                   const SizedBox(height: 20),
 
                   // Titres "Your preferences" et "Your diet"
@@ -277,6 +271,83 @@ class ProfilePageState extends State<ProfilePage> {
                       );
                     }),
                   ),
+                  const SizedBox(height: 20),
+
+                  const Text(
+                    'Account settings',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF323643),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  // Bouton "Sign out"
+                  Row(
+                    children: [
+                      const Text(
+                        "Theme selection :",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Color(0xFF67666D),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      ToggleSwitch(
+                        minWidth: 90.0,
+                        initialLabelIndex:
+                            themeProvider.themeData == AppThemes.darkTheme
+                                ? 1
+                                : 0,
+                        cornerRadius: 20.0,
+                        totalSwitches: 2,
+                        icons: [Icons.light_mode, Icons.dark_mode],
+                        onToggle: (index) {
+                          if (index == 0) {
+                            themeProvider
+                                .setLightTheme(); // Appliquer le thème clair
+                          } else {
+                            themeProvider
+                                .setDarkTheme(); // Appliquer le thème sombre
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: 360.0,
+                    height: 50.0,
+                    child: ButtonGeneric(
+                        content: "Sign out", pressedFunction: pressedDeco),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Bouton "Delete"
+                  SizedBox(
+                    width: 360.0,
+                    height: 50.0,
+                    child: OutlinedButton(
+                      onPressed: pressedDelete,
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Color(0xFFFE724C), // Texte orange
+                        side: BorderSide(
+                            color: Color(0xFFFE724C),
+                            width: 2), // Bordure orange
+                        backgroundColor: Color(0xFFF6F6F6), // Fond blanc
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(15.0), // Bordures arrondies
+                        ),
+                      ),
+                      child: Text(
+                        "Delete your account",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold), // Style du texte
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
