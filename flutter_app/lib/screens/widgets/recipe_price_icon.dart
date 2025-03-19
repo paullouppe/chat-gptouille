@@ -11,15 +11,15 @@ class PriceIcon extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: isFilled
-            ? Color(0xFFFE724C)
-            : Color.fromARGB(255, 255, 187, 168), // Background color
+            ? Theme.of(context).colorScheme.primary
+            : Theme.of(context).colorScheme.onSurface, // Background color
         shape: BoxShape.circle, // Circular background
       ),
       padding: EdgeInsets.all(1.0), // Adjust padding as needed
       child: Icon(
         Icons.euro,
         size: iconSize,
-        color: Colors.white, // Icon color
+        color: Theme.of(context).colorScheme.tertiary, // Icon color
       ),
     );
   }

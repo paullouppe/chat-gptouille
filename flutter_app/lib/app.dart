@@ -9,9 +9,6 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'ChatGPTouille',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
       // Set the initial route; here we use the home route defined in routes.dart
       initialRoute: Routes.home,
       // Define the app routes

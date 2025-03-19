@@ -28,7 +28,7 @@ class HomePage extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Text(
                 'What do you want to eat?',
-                style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.headlineLarge,
               ),
             ),
 
@@ -45,8 +45,9 @@ class HomePage extends StatelessWidget {
                     hintText: "Find a recipe...",
                     hintStyle: WidgetStateProperty.all(
                       TextStyle(
-                          color: const Color.fromARGB(
-                              255, 172, 171, 171)), // Light grey color
+                          color: Theme.of(context)
+                              .colorScheme
+                              .secondary), // Light grey color
                     ),
                     onTap: () {
                       controller.openView();
@@ -73,7 +74,7 @@ class HomePage extends StatelessWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
                   "Recipes you might like",
-                  style: TextStyle(fontSize: 33, fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.headlineLarge,
                 )),
 
             // First Row of Cards
@@ -122,8 +123,7 @@ class HomePage extends StatelessWidget {
             Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text("They also liked",
-                    style:
-                        TextStyle(fontSize: 33, fontWeight: FontWeight.bold))),
+                    style: Theme.of(context).textTheme.headlineLarge)),
 
             // Second Row of Cards
             Padding(

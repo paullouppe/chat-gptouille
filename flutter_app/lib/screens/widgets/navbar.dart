@@ -15,9 +15,9 @@ class NavBar extends StatelessWidget {
       type: BottomNavigationBarType.fixed,
       onTap:
           onItemTapped, //fonction qui va changer la couleur selon l'item tappé
-      backgroundColor: Colors.white,
-      selectedItemColor: Color((0xFFFE724C)),
-      unselectedItemColor: Colors.grey.shade400,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      selectedItemColor: Theme.of(context).colorScheme.primary,
+      unselectedItemColor: Theme.of(context).colorScheme.inversePrimary,
       items: [
         BottomNavigationBarItem(icon: Icon(Icons.explore), label: "Explore"),
         BottomNavigationBarItem(icon: Icon(Icons.chat), label: "Chatbot"),

@@ -41,8 +41,6 @@ class RecipeCard extends StatelessWidget {
                   double cardHeight = constraints.maxHeight;
                   double iconSize = cardWidth * 0.06;
                   double spaceWidth = cardWidth * 0.11;
-                  double titleFontSize = cardHeight * 0.08;
-                  double ratingFontSize = cardHeight * 0.04;
                   double otherFontSize = cardHeight * 0.05;
                   double tagBorderRadius = cardHeight * 0.04;
                   double favoriteSize = cardHeight * 0.14;
@@ -75,13 +73,16 @@ class RecipeCard extends StatelessWidget {
                                 right: 10,
                                 child: Container(
                                   decoration: BoxDecoration(
-                                      color: Color(0xFFFE724C),
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
                                       shape: BoxShape.circle),
                                   height: favoriteSize,
                                   child: IconButton(
                                     icon: Icon(Icons.favorite,
                                         size: favoriteSize / 1.7,
-                                        color: Colors.white),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .tertiary),
                                     onPressed: () {},
                                   ),
                                 ),
@@ -94,7 +95,8 @@ class RecipeCard extends StatelessWidget {
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 16, vertical: 10),
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
                                     borderRadius: BorderRadius.circular(30),
                                   ),
                                   child: Row(
@@ -102,10 +104,9 @@ class RecipeCard extends StatelessWidget {
                                       // First Element
                                       Text(
                                         ratings[0],
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: ratingFontSize * 1.3,
-                                            fontWeight: FontWeight.bold),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headlineMedium,
                                       ),
                                       // Second Element
                                       Icon(Icons.star,
@@ -118,9 +119,9 @@ class RecipeCard extends StatelessWidget {
                                       // Third Element
                                       Text(
                                         ratings[1],
-                                        style: TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: ratingFontSize),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium,
                                       ),
                                     ],
                                   ),
@@ -140,9 +141,9 @@ class RecipeCard extends StatelessWidget {
                                   alignment: Alignment.bottomLeft,
                                   child: Text(
                                     title,
-                                    style: TextStyle(
-                                        fontSize: titleFontSize,
-                                        fontWeight: FontWeight.bold),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium,
                                   ),
                                 ),
                                 SizedBox(
@@ -164,14 +165,17 @@ class RecipeCard extends StatelessWidget {
                                             )),
                                     SizedBox(width: spaceWidth), // Space
                                     Icon(Icons.alarm,
-                                        color: Color(0xFFFE724C),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
                                         size: iconSize),
                                     SizedBox(width: 4.0),
-                                    Text(duration,
-                                        style: TextStyle(
-                                            color: const Color.fromARGB(
-                                                255, 97, 97, 97),
-                                            fontSize: otherFontSize)),
+                                    Text(
+                                      duration,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium,
+                                    )
                                   ],
                                 ),
                                 SizedBox(

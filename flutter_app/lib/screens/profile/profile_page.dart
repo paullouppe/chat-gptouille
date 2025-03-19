@@ -100,31 +100,30 @@ class ProfilePageState extends State<ProfilePage> {
                   400, // Largeur maximale pour éviter l'étirement sur grands écrans
             ),
             child: Padding(
-              padding: const EdgeInsets.all(40.0),
+              padding: const EdgeInsets.all(20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Profil utilisateur
                   Row(
                     children: [
-                      const Icon(
-                        Icons.account_circle_outlined,
-                        size: 80.0,
-                        color: Color(0xFFFE724C),
+                      const Image(
+                        image: AssetImage("assets/images/icon_user.png"),
+                        width: 80.0,
+                        height: 80.0,
                       ),
                       const SizedBox(width: 10),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           Text(
                             'Hello,',
-                            style: TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.bold),
+                            style: Theme.of(context).textTheme.headlineLarge,
                           ),
                           Text(
                             'Paul Louppe',
                             style: TextStyle(
-                                fontSize: 24,
+                                fontSize: 28,
                                 fontWeight: FontWeight.bold,
                                 color: Color(0xFFFE724C)),
                           ),
@@ -135,21 +134,12 @@ class ProfilePageState extends State<ProfilePage> {
                   const SizedBox(height: 20),
 
                   // Titres "Your preferences" et "Your diet"
-                  const Text(
+                  Text(
                     'Your preferences',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF323643),
-                    ),
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
-                  const Text(
-                    'Your diet',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Color(0xFF67666D),
-                    ),
-                  ),
+                  Text('Your diet',
+                      style: Theme.of(context).textTheme.bodyMedium),
 
                   const SizedBox(height: 10),
 
@@ -209,13 +199,8 @@ class ProfilePageState extends State<ProfilePage> {
 
                   const SizedBox(height: 20),
 
-                  const Text(
-                    'Your equipement',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Color(0xFF67666D),
-                    ),
-                  ),
+                  Text('Your equipement',
+                      style: Theme.of(context).textTheme.bodyMedium),
 
                   const SizedBox(height: 10),
 
@@ -273,25 +258,14 @@ class ProfilePageState extends State<ProfilePage> {
                   ),
                   const SizedBox(height: 20),
 
-                  const Text(
-                    'Account settings',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF323643),
-                    ),
-                  ),
+                  Text('Account settings',
+                      style: Theme.of(context).textTheme.headlineMedium),
                   const SizedBox(height: 10),
                   // Bouton "Sign out"
                   Row(
                     children: [
-                      const Text(
-                        "Theme selection :",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Color(0xFF67666D),
-                        ),
-                      ),
+                      Text("Theme selection :",
+                          style: Theme.of(context).textTheme.bodyMedium),
                       const SizedBox(width: 10),
                       ToggleSwitch(
                         minWidth: 90.0,
@@ -330,11 +304,13 @@ class ProfilePageState extends State<ProfilePage> {
                     child: OutlinedButton(
                       onPressed: pressedDelete,
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: Color(0xFFFE724C), // Texte orange
+                        foregroundColor: Theme.of(context)
+                            .colorScheme
+                            .primary, // Texte orange
                         side: BorderSide(
-                            color: Color(0xFFFE724C),
+                            color: Theme.of(context).colorScheme.primary,
                             width: 2), // Bordure orange
-                        backgroundColor: Color(0xFFF6F6F6), // Fond blanc
+                        backgroundColor: Colors.transparent, // Fond blanc
                         shape: RoundedRectangleBorder(
                           borderRadius:
                               BorderRadius.circular(15.0), // Bordures arrondies
