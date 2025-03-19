@@ -1,9 +1,10 @@
 -- init.sql
 
--- First, connect to the correct database
 \c recipe;
 
--- Create the recipes table first
+CREATE EXTENSION IF NOT EXISTS vector;
+
+-- Create the recipes table with an embedding column
 CREATE TABLE IF NOT EXISTS recipes (
     id SERIAL PRIMARY KEY,
     name VARCHAR,
@@ -11,10 +12,10 @@ CREATE TABLE IF NOT EXISTS recipes (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     steps TEXT[],
     description TEXT,
-    ingredients TEXT[]
+    ingredients TEXT[],
+    embedding vector(384)
 );
 
--- Create the staging table
 CREATE TEMP TABLE staging_recipes (
     dummy text,
     name text,
@@ -36,7 +37,6 @@ COPY staging_recipes
 FROM '/db/recipes.csv'
 CSV HEADER;
 
--- Insert the data with better array handling
 INSERT INTO recipes (name, minutes, steps, description, ingredients)
 SELECT
     name,
