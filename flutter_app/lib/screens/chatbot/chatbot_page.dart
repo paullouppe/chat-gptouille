@@ -74,6 +74,7 @@ class ChatbotPage extends StatelessWidget {
                   child: TextField(
                     decoration: InputDecoration(
                       hintText: 'Send your message to Chatgptouille...',
+                      hintStyle: Theme.of(context).textTheme.bodyMedium,
                       border: InputBorder.none,
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 15, horizontal: 15),
