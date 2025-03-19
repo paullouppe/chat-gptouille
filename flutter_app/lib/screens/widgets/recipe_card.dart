@@ -23,6 +23,8 @@ class RecipeCard extends StatelessWidget {
     required this.height,
   });
 
+  
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -45,11 +47,11 @@ class RecipeCard extends StatelessWidget {
                   double tagBorderRadius = cardHeight * 0.04;
                   double favoriteSize = cardHeight * 0.14;
 
+                  
+
                   return
                       // Superior section with background image
-                      Expanded(
-                    flex: 9,
-                    child: Column(
+                      Column(
                       children: [
                         // Background Image
                         Expanded(
@@ -96,7 +98,7 @@ class RecipeCard extends StatelessWidget {
                                       horizontal: 16, vertical: 10),
                                   decoration: BoxDecoration(
                                     color:
-                                        Theme.of(context).colorScheme.primary,
+                                        Theme.of(context).colorScheme.tertiary,
                                     borderRadius: BorderRadius.circular(30),
                                   ),
                                   child: Row(
@@ -137,15 +139,16 @@ class RecipeCard extends StatelessWidget {
                             padding: const EdgeInsets.all(16.0),
                             child: Column(
                               children: [
+                                Expanded(child:
                                 Align(
                                   alignment: Alignment.bottomLeft,
                                   child: Text(
-                                    title,
+                                    title[0].toUpperCase() + title.substring(1),
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineMedium,
                                   ),
-                                ),
+                                ),),
                                 SizedBox(
                                   height: 16,
                                 ),
@@ -203,8 +206,7 @@ class RecipeCard extends StatelessWidget {
                           ),
                         ),
                       ],
-                    ),
-                  );
+                    );
                 },
               ),
             ),

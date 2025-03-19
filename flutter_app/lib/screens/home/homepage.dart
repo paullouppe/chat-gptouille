@@ -1,10 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/screens/home/search_results.dart';
 import '../widgets/recipe_card.dart';
+import 'package:flutter_app/services/requests.dart';
+import 'dart:math';
 
 //Classe qui donne le contenu de la Homepage sans prendre en considératiion le navigation bar qui est traité à part.
 //(c'est là où on construit la page, pas au dessus)
-class HomePage extends StatelessWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  List<Map<String, dynamic>> recipes = [];
+
+  Future<void> fetchRecipe() async {
+    Set<String> recipesUrl = {};
+
+    while (recipesUrl.length < 6) {
+      recipesUrl.add('http://localhost:8080/recipes/${Random().nextInt(10000) + 1}');
+    }
+
+    List<List<Map<String, dynamic>>> results = await Future.wait(
+      recipesUrl.map((url) => getRecipe(url)),
+    );
+    List<Map<String, dynamic>> allRecipes = results.expand((list) => list).toList();
+  
+    setState(() {
+      recipes = allRecipes;
+    });
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    fetchRecipe();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,147 +62,114 @@ class HomePage extends StatelessWidget {
               child: Text(
                 'What do you want to eat?',
                 style: Theme.of(context).textTheme.headlineLarge,
-              ),
-            ),
 
-            // Image
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SearchAnchor(
-                builder: (BuildContext context, SearchController controller) {
-                  return SearchBar(
-                    controller: controller,
-                    padding: const WidgetStatePropertyAll<EdgeInsets>(
-                      EdgeInsets.symmetric(horizontal: 16.0),
-                    ),
-                    hintText: "Find a recipe...",
-                    hintStyle: WidgetStateProperty.all(
+              ),),
+           
+
+              // Search Bar
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SearchAnchor(
+                  builder: (BuildContext context, SearchController controller) {
+                    return SearchBar(
+                      controller: controller,
+                      padding: const WidgetStatePropertyAll<EdgeInsets>(
+                        EdgeInsets.symmetric(horizontal: 16.0),
+                      ),
+                      hintText: "Find a recipe...",
+                      hintStyle: WidgetStateProperty.all(
                       TextStyle(
                           color: Theme.of(context)
                               .colorScheme
                               .secondary), // Light grey color
                     ),
-                    onTap: () {
-                      controller.openView();
-                    },
-                    onChanged: (_) {
-                      controller.openView();
-                    },
-                    leading: const Icon(Icons.search),
-                  );
-                },
-                suggestionsBuilder:
-                    (BuildContext context, SearchController controller) {
-                  return List<ListTile>.generate(5, (int index) {
-                    final String item = 'item $index';
-                    return ListTile(
-                      title: Text(item),
+                      onTap: () {
+                        controller.openView();
+                      },
+                      onChanged: (String query) async {
+                // Call the API with the user's query
+                List<dynamic> results = await fetchSearchResults(query);
+                
+                // Navigate to another page and pass the results
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SearchResults(results: results),
+                  ),
+                );
+              },
+                      leading: const Icon(Icons.search),
                     );
-                  });
-                },
+                  },
+                  suggestionsBuilder: (BuildContext context, SearchController controller) {
+                    return List<ListTile>.generate(5, (int index) {
+                      final String item = 'item $index';
+                      return ListTile(
+                        title: Text(item),
+                      );
+                    });
+                  },
+                ),
               ),
-            ),
-
-            Padding(
+                    Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
                   "Recipes you might like",
                   style: Theme.of(context).textTheme.headlineLarge,
                 )),
 
-            // First Row of Cards
-            Padding(
-              padding: const EdgeInsets.all(14.0),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Center(
-                        child: RecipeCard(
-                      title: "Vegan Taccos",
-                      imagePath: "assets/images/recipes/vegan_tacos.png",
-                      tags: ["VEGAN", "EASY"],
-                      duration: "10 to 15 mins",
-                      ratings: ["4,5", "(25+)"],
-                      price: 2,
-                      height: 425,
-                    )),
-                    Center(
-                        child: RecipeCard(
-                      title: "Yummy Noodles",
-                      imagePath: "assets/images/recipes/noodles.png",
-                      tags: ["VARIED", "FLAVORFUL", "GREAT"],
-                      duration: "20 to 30 mins",
-                      ratings: ["4", "(20+)"],
-                      price: 1,
-                      height: 425,
-                    )),
-                    Center(
-                        child: RecipeCard(
-                      title: "Vegan Taccos",
-                      imagePath: "assets/images/recipes/vegan_tacos.png",
-                      tags: ["VEGAN", "EASY"],
-                      duration: "10 to 15 mins",
-                      ratings: ["4,5", "(25+)"],
-                      price: 2,
-                      height: 425,
-                    )),
-                  ],
-                ),
-              ),
-            ),
+                    // First Row of Recipe Cards
+                    Padding(
+                      padding: const EdgeInsets.all(14.0),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: recipes
+                              .take(3)
+                              .map((recipeData) => _buildRecipeCard(recipeData))
+                              .toList(),
+                        ),
+                      ),
+                    ),
 
-            Padding(
+                    const SizedBox(height: 20),
+
+                    Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text("They also liked",
                     style: Theme.of(context).textTheme.headlineLarge)),
 
-            // Second Row of Cards
-            Padding(
-              padding: const EdgeInsets.all(14.0),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Center(
-                        child: RecipeCard(
-                      title: "Vegan Taccos",
-                      imagePath: "assets/images/recipes/vegan_tacos.png",
-                      tags: ["VEGAN", "EASY"],
-                      duration: "10 to 15 mins",
-                      ratings: ["4,5", "(25+)"],
-                      price: 2,
-                      height: 425,
-                    )),
-                    Center(
-                        child: RecipeCard(
-                      title: "Yummy Noodles",
-                      imagePath: "assets/images/recipes/noodles.png",
-                      tags: ["VARIED", "FLAVORFUL", "GREAT"],
-                      duration: "20 to 30 mins",
-                      ratings: ["4", "(20+)"],
-                      price: 1,
-                      height: 425,
-                    )),
-                    Center(
-                        child: RecipeCard(
-                      title: "Vegan Taccos",
-                      imagePath: "assets/images/recipes/vegan_tacos.png",
-                      tags: ["VEGAN", "EASY"],
-                      duration: "10 to 15 mins",
-                      ratings: ["4,5", "(25+)"],
-                      price: 2,
-                      height: 425,
-                    )),
+                    // Second Row of Recipe Cards
+                    Padding(
+                      padding: const EdgeInsets.all(14.0),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: recipes
+                              .skip(3)
+                              .take(3)
+                              .map((recipeData) => _buildRecipeCard(recipeData))
+                              .toList(),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
             ),
-          ]),
-        ),
-      )),
     );
   }
 }
+
+  // Helper function to create RecipeCard widgets
+  Widget _buildRecipeCard(Map<String, dynamic> recipeData) {
+    return RecipeCard(
+      title: recipeData['name'],
+      imagePath: "assets/images/recipes/vegan_tacos.png",
+      tags: ["EASY"],
+      duration: "${recipeData['minutes']} min",
+      ratings: ["3", "20+"],
+      price: 3,
+      height: 425,
+    );
+  }

@@ -57,3 +57,50 @@ Future<Stream<String>> streamRequest(Map<String, dynamic> data, String apiUrl) a
     rethrow;
   }
 }
+
+Future<void> get(url) async {
+  final dio = Dio(); // Create Dio instance
+
+  try {
+    Response response = await dio.get(url); // Replace with your API URL
+    if (response.statusCode == 200) {
+      return(response.data); // Handle the response data
+    }
+  } catch (e) {
+    print('Error: $e'); // Handle errors
+  }
+}
+
+Future<List<Map<String, dynamic>>> getRecipe(String url) async {
+    final dio = Dio(); // Create Dio instance
+  
+    try {
+      Response response = await dio.get(url);
+      if (response.statusCode == 200) {
+        return [Map<String, dynamic>.from(response.data)];
+      } else {
+        throw Exception('Failed to load recipes');
+      }
+    } catch (e) {
+      print('Error fetching recipes: $e');
+      return [];
+    }
+  }
+
+  Future<List<dynamic>> fetchSearchResults(String query) async {
+  try {
+    final response = await Dio().post(
+      'https://', 
+      data: {'query': query},
+    );
+    
+    if (response.statusCode == 200) {
+      return response.data;  // Assuming the response contains a list of results?
+    } else {
+      throw Exception('Failed to load search results');
+    }
+  } catch (e) {
+    throw Exception('Error: $e');
+  }
+}
+

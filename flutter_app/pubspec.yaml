@@ -65,31 +65,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/recipes/
-    - assets/images/icon_carrot.png 
-    - assets/images/icon_fish.png 
-    - assets/images/icon_leaf.png 
-    - assets/images/icon_milk.png 
-    - assets/images/icon_pork.png 
-    - assets/images/icon_wheat.png 
-    - assets/images/icon_carrot_selected.png 
-    - assets/images/icon_fish_selected.png 
-    - assets/images/icon_leaf_selected.png 
-    - assets/images/icon_milk_selected.png 
-    - assets/images/icon_pork_selected.png 
-    - assets/images/icon_wheat_selected.png 
-    - assets/images/icon_oven.png 
-    - assets/images/icon_bake.png 
-    - assets/images/icon_microwave.png 
-    - assets/images/icon_mixer.png 
-    - assets/images/icon_robot.png 
-    - assets/images/icon_oven_selected.png 
-    - assets/images/icon_bake_selected.png 
-    - assets/images/icon_microwave_selected.png 
-    - assets/images/icon_mixer_selected.png 
-    - assets/images/icon_robot_selected.png 
-    - assets/images/deco_login_signup.png
-    - assets/images/chatbot.png
-    - assets/images/icon_user.png
+
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
