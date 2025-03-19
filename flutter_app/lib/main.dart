@@ -2,21 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './theme/theme_provider.dart';
 import 'screens/pages_navbar.dart';
-import 'package:flutter_app/screens/signup/sign_up.dart';
-
 
 void main() {
-  runApp(const Chatgptouille());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
-class Chatgptouille extends StatelessWidget {
-  const Chatgptouille({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SignUpPage(),
+      theme: themeProvider.themeData, // Applique le thème dynamique
+      home: const NavBarPages(), // Page principale
     );
   }
 }
