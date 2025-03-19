@@ -23,6 +23,7 @@ user_equipments = Table(
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    name = Column(String, unique=False, nullable=False)
     mail = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
     
