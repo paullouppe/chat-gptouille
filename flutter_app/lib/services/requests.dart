@@ -14,7 +14,7 @@ Future<String> postRequest(Map<String, dynamic> data,String apiUrl) async {
 
     if (response.statusCode == 200) {
       
-      print("Requête post réussie : ${response.data}");
+      //print("Requête post réussie : ${response.data}");
       //Il faut retourner un string tout en gardant une structure json correcte
       return jsonEncode(response.data);
     } else {
