@@ -35,6 +35,10 @@ class RecipeOut(RecipeBase):
     class Config:
         from_attributes = True
 
+class RecipeSearch(BaseModel):
+    name: str
+    n: Optional[int] = 10
+
 # -------------------------------
 # CRUD Endpoints for Recipes
 # -------------------------------
@@ -113,3 +117,12 @@ def delete_recipe(id: int, db: Session = Depends(get_db)):
     db.delete(recipe)
     db.commit()
     return {"detail": "Recipe deleted successfully"}
+
+@router.post("/search", response_model=List[RecipeOut])
+def search_recipes(search: RecipeSearch, db: Session = Depends(get_db)):
+    recipes = db.query(Recipe).filter(Recipe.name.ilike(f"%{search.name}%")).limit(search.n).all()
+    
+    if not recipes:
+        raise HTTPException(status_code=404, detail="No recipes found with the given name")
+    
+    return recipes
