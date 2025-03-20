@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/chatbot/chatbot_page.dart';
-import 'package:flutter_app/screens/recipe_desc/recipe_page.dart';
+import 'package:flutter_app/screens/AddRecipe/recipe_page.dart';
 import 'package:flutter_app/screens/signin/login_page.dart';
 import 'package:flutter_app/screens/signin/provider_user.dart';
 import 'package:provider/provider.dart';
@@ -51,8 +51,9 @@ class NavBarPagesState extends State<NavBarPages> {
   final List<Widget> _pages = [
     HomePage(),
     ChatbotPage(),
-    RecipePage(),
+    AddRecipePage(),
     ProfilePage(),
+    
   ];
 
   @override

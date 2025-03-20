@@ -23,14 +23,22 @@ class _HomePageState extends State<HomePage> {
       recipesUrl.add('http://localhost:8080/recipes/${Random().nextInt(10000) + 1}');
     }
 
-    List<List<Map<String, dynamic>>> results = await Future.wait(
-      recipesUrl.map((url) => getRecipe(url)),
-    );
-    List<Map<String, dynamic>> allRecipes = results.expand((list) => list).toList();
-  
-    setState(() {
-      recipes = allRecipes;
-    });
+    try {
+      List<List<Map<String, dynamic>>> results = await Future.wait(
+        recipesUrl.map((url) => getRecipe(url)),
+      );
+      List<Map<String, dynamic>> allRecipes = results.expand((list) => list).toList();
+
+      // Vérifier si le widget est encore monté avant de faire un setState
+      if (mounted) {
+        setState(() {
+          recipes = allRecipes;
+        });
+      }
+    } catch (e) {
+      // Gérer les erreurs ici
+      print('Erreur lors de la récupération des recettes: $e');
+    }
   }
 
 
