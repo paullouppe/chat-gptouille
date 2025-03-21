@@ -23,8 +23,6 @@ class RecipeCard extends StatelessWidget {
     required this.height,
   });
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -47,166 +45,165 @@ class RecipeCard extends StatelessWidget {
                   double tagBorderRadius = cardHeight * 0.04;
                   double favoriteSize = cardHeight * 0.14;
 
-                  
-
                   return
                       // Superior section with background image
                       Column(
-                      children: [
-                        // Background Image
-                        Expanded(
-                          flex: 5,
-                          child: Stack(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(20)),
-                                  image: DecorationImage(
-                                    image: AssetImage(imagePath),
-                                    fit: BoxFit.cover,
-                                  ),
+                    children: [
+                      // Background Image
+                      Expanded(
+                        flex: 5,
+                        child: Stack(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20)),
+                                image: DecorationImage(
+                                  image: AssetImage(imagePath),
+                                  fit: BoxFit.cover,
                                 ),
                               ),
+                            ),
 
-                              // Button on top right
-                              Positioned(
-                                top: 10,
-                                right: 10,
-                                child: Container(
-                                  decoration: BoxDecoration(
+                            // Button on top right
+                            Positioned(
+                              top: 10,
+                              right: 10,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    shape: BoxShape.circle),
+                                height: favoriteSize,
+                                child: IconButton(
+                                  icon: Icon(Icons.favorite,
+                                      size: favoriteSize / 1.7,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .tertiary),
+                                  onPressed: () {},
+                                ),
+                              ),
+                            ),
+                            // Small image on top left
+                            Positioned(
+                              top: 15,
+                              left: 10,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 10),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.tertiary,
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                child: Row(
+                                  children: [
+                                    // First Element
+                                    Text(
+                                      ratings[0],
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineMedium,
+                                    ),
+                                    // Second Element
+                                    Icon(Icons.star,
+                                        color: Colors.yellow,
+                                        size: iconSize / 1.5),
+                                    SizedBox(
+                                        width: 4), // Space between elements
+                                    SizedBox(
+                                        width: 4), // Space between elements
+                                    // Third Element
+                                    Text(
+                                      ratings[1],
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Bottom section
+                      Expanded(
+                        flex: 4,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            children: [
+                              Expanded(
+                                  child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  title[0].toUpperCase() + title.substring(1),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineMedium,
+                                  overflow: TextOverflow
+                                      .ellipsis, // Ensures text doesn't wrap unnecessarily
+                                  maxLines:
+                                      1, // Forces text to stay on a single line
+                                ),
+                              )),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              Row(
+                                children: [
+                                  ...List.generate(
+                                      3,
+                                      (index) => Row(
+                                            children: [
+                                              PriceIcon(
+                                                  isFilled: index < price,
+                                                  iconSize: iconSize),
+                                              SizedBox(
+                                                  width:
+                                                      4.0), // Space after each icon
+                                            ],
+                                          )),
+                                  SizedBox(width: spaceWidth), // Space
+                                  Icon(Icons.alarm,
                                       color:
                                           Theme.of(context).colorScheme.primary,
-                                      shape: BoxShape.circle),
-                                  height: favoriteSize,
-                                  child: IconButton(
-                                    icon: Icon(Icons.favorite,
-                                        size: favoriteSize / 1.7,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .tertiary),
-                                    onPressed: () {},
-                                  ),
-                                ),
+                                      size: iconSize),
+                                  SizedBox(width: 4.0),
+                                  Text(
+                                    duration,
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
+                                  )
+                                ],
                               ),
-                              // Small image on top left
-                              Positioned(
-                                top: 15,
-                                left: 10,
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 10),
-                                  decoration: BoxDecoration(
-                                    color:
-                                        Theme.of(context).colorScheme.tertiary,
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      // First Element
-                                      Text(
-                                        ratings[0],
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headlineMedium,
-                                      ),
-                                      // Second Element
-                                      Icon(Icons.star,
-                                          color: Colors.yellow,
-                                          size: iconSize / 1.5),
-                                      SizedBox(
-                                          width: 4), // Space between elements
-                                      SizedBox(
-                                          width: 4), // Space between elements
-                                      // Third Element
-                                      Text(
-                                        ratings[1],
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium,
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  ...List.generate(
+                                      tags.length,
+                                      (index) => Row(
+                                            children: [
+                                              RecipeTag(
+                                                text: tags[index],
+                                                borderRadius: tagBorderRadius,
+                                                fontSize: otherFontSize / 1.2,
+                                              ),
+                                              SizedBox(width: spaceWidth / 3)
+                                            ],
+                                          )),
+                                ],
                               ),
                             ],
                           ),
                         ),
-                        // Bottom section
-                        Expanded(
-                          flex: 4,
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              children: [
-                                Expanded(child:
-                                Align(
-                                  alignment: Alignment.bottomLeft,
-                                  child: Text(
-                                    title[0].toUpperCase() + title.substring(1),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headlineMedium,
-                                  ),
-                                ),),
-                                SizedBox(
-                                  height: 16,
-                                ),
-                                Row(
-                                  children: [
-                                    ...List.generate(
-                                        3,
-                                        (index) => Row(
-                                              children: [
-                                                PriceIcon(
-                                                    isFilled: index < price,
-                                                    iconSize: iconSize),
-                                                SizedBox(
-                                                    width:
-                                                        4.0), // Space after each icon
-                                              ],
-                                            )),
-                                    SizedBox(width: spaceWidth), // Space
-                                    Icon(Icons.alarm,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                        size: iconSize),
-                                    SizedBox(width: 4.0),
-                                    Text(
-                                      duration,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
-                                    )
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 16,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    ...List.generate(
-                                        tags.length,
-                                        (index) => Row(
-                                              children: [
-                                                RecipeTag(
-                                                  text: tags[index],
-                                                  borderRadius: tagBorderRadius,
-                                                  fontSize: otherFontSize / 1.2,
-                                                ),
-                                                SizedBox(width: spaceWidth / 3)
-                                              ],
-                                            )),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
+                      ),
+                    ],
+                  );
                 },
               ),
             ),

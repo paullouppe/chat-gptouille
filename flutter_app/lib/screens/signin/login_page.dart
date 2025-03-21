@@ -61,7 +61,7 @@ class LoginPage extends StatelessWidget {
             child : Column(
             children: [
               Image.asset(
-              'images/deco_login_signup.png',
+              'assets/images/deco_login_signup.png',
                 width: double.infinity, //ça c'est pour étendre l'image
                 fit: BoxFit.cover, //Couvre tout l'écran
               ),

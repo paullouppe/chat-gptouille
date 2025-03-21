@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/screens/home/search_results.dart';
 import '../widgets/recipe_card.dart';
 import 'package:flutter_app/services/requests.dart';
 import 'dart:math';
 
-//Classe qui donne le contenu de la Homepage sans prendre en considératiion le navigation bar qui est traité à part.
-//(c'est là où on construit la page, pas au dessus)
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -15,32 +12,42 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<Map<String, dynamic>> recipes = [];
+  List<String> recipeImages = [
+    "assets/images/recipes/meal1.jpg",
+    "assets/images/recipes/meal2.jpg",
+    "assets/images/recipes/meal3.jpg",
+    "assets/images/recipes/meal4.jpg",
+    "assets/images/recipes/meal5.jpg",
+    "assets/images/recipes/meal6.jpg"
+  ];
+
+  List<dynamic> searchResults = []; // Store search results
 
   Future<void> fetchRecipe() async {
     Set<String> recipesUrl = {};
+    recipeImages.shuffle();
 
     while (recipesUrl.length < 6) {
-      recipesUrl.add('http://localhost:8080/recipes/${Random().nextInt(10000) + 1}');
+      recipesUrl
+          .add('http://localhost:8080/recipes/${Random().nextInt(10000) + 1}');
     }
 
     try {
       List<List<Map<String, dynamic>>> results = await Future.wait(
         recipesUrl.map((url) => getRecipe(url)),
       );
-      List<Map<String, dynamic>> allRecipes = results.expand((list) => list).toList();
+      List<Map<String, dynamic>> allRecipes =
+          results.expand((list) => list).toList();
 
-      // Vérifier si le widget est encore monté avant de faire un setState
       if (mounted) {
         setState(() {
           recipes = allRecipes;
         });
       }
     } catch (e) {
-      // Gérer les erreurs ici
-      print('Erreur lors de la récupération des recettes: $e');
+      print('Error fetching recipes: $e');
     }
   }
-
 
   @override
   void initState() {
@@ -52,133 +59,147 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-          body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 16.0),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            //Logo
-            Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 20,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Logo
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 20),
+                  child: Image.asset('assets/images/gptouille_logo.png'),
                 ),
-                child: Image.asset('assets/images/gptouille_logo.png')),
 
-            // Title Text
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                'What do you want to eat?',
-                style: Theme.of(context).textTheme.headlineLarge,
-
-              ),),
-           
-
-              // Search Bar
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SearchAnchor(
-                  builder: (BuildContext context, SearchController controller) {
-                    return SearchBar(
-                      controller: controller,
-                      padding: const WidgetStatePropertyAll<EdgeInsets>(
-                        EdgeInsets.symmetric(horizontal: 16.0),
-                      ),
-                      hintText: "Find a recipe...",
-                      hintStyle: WidgetStateProperty.all(
-                      TextStyle(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .secondary), // Light grey color
-                    ),
-                      onTap: () {
-                        controller.openView();
-                      },
-                      onChanged: (String query) async {
-                // Call the API with the user's query
-                List<dynamic> results = await fetchSearchResults(query);
-                
-                // Navigate to another page and pass the results
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SearchResults(results: results),
+                // Title
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    'What do you want to eat?',
+                    style: Theme.of(context).textTheme.headlineLarge,
                   ),
-                );
-              },
-                      leading: const Icon(Icons.search),
-                    );
-                  },
-                  suggestionsBuilder: (BuildContext context, SearchController controller) {
-                    return List<ListTile>.generate(5, (int index) {
-                      final String item = 'item $index';
-                      return ListTile(
-                        title: Text(item),
-                      );
-                    });
-                  },
                 ),
-              ),
-                    Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  "Recipes you might like",
-                  style: Theme.of(context).textTheme.headlineLarge,
-                )),
 
-                    // First Row of Recipe Cards
-                    Padding(
-                      padding: const EdgeInsets.all(14.0),
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: recipes
-                              .take(3)
-                              .map((recipeData) => _buildRecipeCard(recipeData))
-                              .toList(),
+                // Search Bar
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: "Find a recipe...",
+                        border: InputBorder.none,
+                        prefixIcon: Icon(Icons.search),
+                      ),
+                      onSubmitted: (query) async {
+                        FocusScope.of(context).unfocus(); // Close keyboard
+
+                        List<dynamic> results =
+                            await fetchSearchResults(query, 6);
+                        if (!context.mounted) return;
+
+                        setState(() {
+                          searchResults = results; // Update search results
+                        });
+                      },
+                    ),
+                  ),
+                ),
+
+                // If searchResults is not empty, show search results
+                if (searchResults.isNotEmpty) ...[
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      "Search Results",
+                      style: Theme.of(context).textTheme.headlineLarge,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Column(
+                        children: List.generate(
+                          searchResults.length,
+                          (index) =>
+                              _buildRecipeCard(searchResults[index], index),
                         ),
                       ),
                     ),
-
-                    const SizedBox(height: 20),
-
-                    Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text("They also liked",
-                    style: Theme.of(context).textTheme.headlineLarge)),
-
-                    // Second Row of Recipe Cards
-                    Padding(
-                      padding: const EdgeInsets.all(14.0),
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: recipes
-                              .skip(3)
-                              .take(3)
-                              .map((recipeData) => _buildRecipeCard(recipeData))
-                              .toList(),
+                  ),
+                ]
+                // Else, show the default layout
+                else ...[
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      "Recipes you might like",
+                      style: Theme.of(context).textTheme.headlineLarge,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(14.0),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: List.generate(
+                          recipes.take(3).length,
+                          (index) => _buildRecipeCard(
+                              recipes.take(3).elementAt(index), index),
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      "They also liked",
+                      style: Theme.of(context).textTheme.headlineLarge,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(14.0),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: List.generate(
+                          recipes.skip(3).take(3).length,
+                          (index) => _buildRecipeCard(
+                              recipes.skip(3).take(3).elementAt(index),
+                              index + 3),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ],
             ),
-    ));
+          ),
+        ),
+      ),
+    );
   }
-}
 
   // Helper function to create RecipeCard widgets
-  Widget _buildRecipeCard(Map<String, dynamic> recipeData) {
+  Widget _buildRecipeCard(Map<String, dynamic> recipeData, int index) {
     return RecipeCard(
       title: recipeData['name'],
-      imagePath: "assets/images/recipes/vegan_tacos.png",
-      tags: ["EASY"],
+      imagePath: recipeImages[index],
+      tags: ["TASTY", "EASY"],
       duration: "${recipeData['minutes']} min",
-      ratings: ["3", "20+"],
-      price: 3,
+      ratings: [
+        (Random().nextInt(3) + 2).toString(),
+        "(${Random().nextInt(12) * 5 + 20}+)"
+      ],
+      price: Random().nextInt(3) + 1,
       height: 425,
     );
   }
+}

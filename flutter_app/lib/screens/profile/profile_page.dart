@@ -354,8 +354,8 @@ class ProfilePageState extends State<ProfilePage> {
 Future<void> deleteAccount(context) async {
   final userProvider = Provider.of<UserProvider>(context, listen: false);
   String apiUrl = "http://localhost:8080/users/${userProvider.id}";
-  String access_token = userProvider.accessToken;
-  String result = await deleteAccountRequest(access_token, apiUrl);
+  String accessToken = userProvider.accessToken;
+  String result = await deleteAccountRequest(accessToken, apiUrl);
   if (result=="success"){
     _showSuccessSuppression(context);
   }

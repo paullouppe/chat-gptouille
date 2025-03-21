@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AlertDialogProblem extends StatelessWidget{
+  const AlertDialogProblem({super.key});
+
+  @override
   Widget build(BuildContext context){
     return AlertDialog(
         title: Text("Current problem"),

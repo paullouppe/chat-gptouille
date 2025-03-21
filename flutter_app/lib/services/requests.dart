@@ -126,15 +126,15 @@ Future<List<Map<String, dynamic>>> getRecipe(String url) async {
     }
   }
 
-  Future<List<dynamic>> fetchSearchResults(String query) async {
+  Future<List<dynamic>> fetchSearchResults(String query, int n) async {
   try {
     final response = await Dio().post(
-      'https://', 
-      data: {'query': query},
+      'http://localhost:8080/recipes/search', 
+      data: {'name': query, 'n': n},
     );
     
     if (response.statusCode == 200) {
-      return response.data;  // Assuming the response contains a list of results?
+      return response.data; 
     } else {
       throw Exception('Failed to load search results');
     }

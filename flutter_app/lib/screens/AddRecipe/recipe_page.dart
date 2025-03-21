@@ -132,6 +132,8 @@ class RecipePageState extends State<AddRecipePage> {
 
 //Récupération de l'image de la recette
 class ImagePickerWidget extends StatefulWidget {
+  const ImagePickerWidget({super.key});
+
   @override
   _ImagePickerWidgetState createState() => _ImagePickerWidgetState();
 }
@@ -181,7 +183,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
 
-  CustomTextField({Key? key, required this.controller}) : super(key: key);
+  const CustomTextField({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -216,12 +218,12 @@ class IngredientInput extends StatelessWidget {
   final TextEditingController quantiteController;
   final VoidCallback onAdd;
 
-  IngredientInput({
-    Key? key,
+  const IngredientInput({
+    super.key,
     required this.alimentController,
     required this.quantiteController,
     required this.onAdd,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -317,10 +319,10 @@ class DurationCounter extends StatefulWidget {
   final ValueChanged<int> onChanged;
 
   const DurationCounter({
-    Key? key,
+    super.key,
     this.initialMinutes = 10,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   _DurationCounterState createState() => _DurationCounterState();
