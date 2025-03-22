@@ -2,9 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:dio/dio.dart';
 
-// Requête POST
-Future<String> postRequest(Map<String, dynamic> data,String apiUrl) async {
+//Stores API requests..
 
+// User info POST request.
+Future<String> postRequest(Map<String, dynamic> data, String apiUrl) async {
   Dio dio = Dio();
   try {
     Response response = await dio.post(
@@ -13,7 +14,6 @@ Future<String> postRequest(Map<String, dynamic> data,String apiUrl) async {
     );
 
     if (response.statusCode == 200) {
-      
       //print("Requête post réussie : ${response.data}");
       //Il faut retourner un string tout en gardant une structure json correcte
       return jsonEncode(response.data);
@@ -24,39 +24,36 @@ Future<String> postRequest(Map<String, dynamic> data,String apiUrl) async {
   } catch (e) {
     if (e is DioException) {
       print("Erreur API : ${e.response?.statusCode} - ${e.response?.data}");
-      //Si le mail existe déjà on l'indique
+      // Indicates if email already exists.
       if (e.response?.statusCode == 400) {
         return "mail already exists";
-      }
-      else if (e.response?.statusCode == 401) {
+      } else if (e.response?.statusCode == 401) {
         return "Invalid email or password";
       }
       return "problem";
     } else {
-      print("Erreur de connexion à l'API : $e"); 
+      print("Erreur de connexion à l'API : $e");
       return "problem";
     }
-    
   }
 }
 
+// Account DELETE request
 
-// Requête DELETE
-
-Future<String> deleteAccountRequest (String accessToken, String apiUrl) async {
+Future<String> deleteAccountRequest(String accessToken, String apiUrl) async {
   Dio dio = Dio();
 
   try {
-    // Définir les en-têtes avec le token d'accès
+    // Defines headers bases on access token.
     dio.options.headers = {
-      'Authorization': 'Bearer $accessToken',  // Ajouter le token JWT
+      'Authorization': 'Bearer $accessToken', // Adds the JWT token.
     };
 
     // Effectuer la requête DELETE
     Response response = await dio.delete(apiUrl);
 
     if (response.statusCode == 200) {
-      // Suppression réussie
+      // Succesful deletion.
       return "success";
     } else {
       // Autre réponse HTTP
@@ -64,18 +61,19 @@ Future<String> deleteAccountRequest (String accessToken, String apiUrl) async {
     }
   } catch (e) {
     if (e is DioException) {
-      // Gérer les erreurs spécifiques de Dio
+      // Manages Dio specific errors.
       print("Erreur API : ${e.response?.statusCode} - ${e.response?.data}");
       return "Erreur de l'API lors de la suppression du compte";
     } else {
-      // Autres erreurs générales
+      // Manages generic errors.
       print("Erreur de connexion : $e");
       return "Erreur lors de la connexion à l'API";
     }
   }
 }
 
-Future<Stream<String>> streamRequest(Map<String, dynamic> data, String apiUrl) async {
+Future<Stream<String>> streamRequest(
+    Map<String, dynamic> data, String apiUrl) async {
   Dio dio = Dio();
   try {
     // Set the response type to stream.
@@ -86,7 +84,8 @@ Future<Stream<String>> streamRequest(Map<String, dynamic> data, String apiUrl) a
     );
 
     if (response.statusCode == 200) {
-      Stream<String> stream = utf8.decoder.bind(response.data!.stream).transform(LineSplitter());
+      Stream<String> stream =
+          utf8.decoder.bind(response.data!.stream).transform(LineSplitter());
       return stream;
     } else {
       throw Exception("Réponse inattendue : ${response.statusCode}");
@@ -97,44 +96,33 @@ Future<Stream<String>> streamRequest(Map<String, dynamic> data, String apiUrl) a
   }
 }
 
-Future<void> get(url) async {
-  final dio = Dio(); // Create Dio instance
+// GET a recipe from database based on id.
+Future<List<Map<String, dynamic>>> getRecipe(String url) async {
+  final dio = Dio();
 
   try {
-    Response response = await dio.get(url); // Replace with your API URL
+    Response response = await dio.get(url);
     if (response.statusCode == 200) {
-      return(response.data); // Handle the response data
+      return [Map<String, dynamic>.from(response.data)];
+    } else {
+      throw Exception('Failed to load recipes');
     }
   } catch (e) {
-    print('Error: $e'); // Handle errors
+    print('Error fetching recipes: $e');
+    return [];
   }
 }
 
-Future<List<Map<String, dynamic>>> getRecipe(String url) async {
-    final dio = Dio(); // Create Dio instance
-  
-    try {
-      Response response = await dio.get(url);
-      if (response.statusCode == 200) {
-        return [Map<String, dynamic>.from(response.data)];
-      } else {
-        throw Exception('Failed to load recipes');
-      }
-    } catch (e) {
-      print('Error fetching recipes: $e');
-      return [];
-    }
-  }
-
-  Future<List<dynamic>> fetchSearchResults(String query, int n) async {
+// GET semantic search results of recipes.
+Future<List<dynamic>> fetchSearchResults(String query, int n) async {
   try {
     final response = await Dio().post(
-      'http://localhost:8080/recipes/search', 
+      'http://localhost:8080/recipes/search',
       data: {'name': query, 'n': n},
     );
-    
+
     if (response.statusCode == 200) {
-      return response.data; 
+      return response.data;
     } else {
       throw Exception('Failed to load search results');
     }
@@ -142,4 +130,3 @@ Future<List<Map<String, dynamic>>> getRecipe(String url) async {
     throw Exception('Error: $e');
   }
 }
-

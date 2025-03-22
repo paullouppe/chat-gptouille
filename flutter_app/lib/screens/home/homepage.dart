@@ -3,6 +3,7 @@ import '../widgets/recipe_card.dart';
 import 'package:flutter_app/services/requests.dart';
 import 'dart:math';
 
+// Main page.
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -10,8 +11,11 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
+// Shows default, random recipes unless the user makes a search.
 class _HomePageState extends State<HomePage> {
+  // Stores data obtained from database
   List<Map<String, dynamic>> recipes = [];
+  // Stores images to randomly assign to recipes.
   List<String> recipeImages = [
     "assets/images/recipes/meal1.jpg",
     "assets/images/recipes/meal2.jpg",
@@ -21,17 +25,22 @@ class _HomePageState extends State<HomePage> {
     "assets/images/recipes/meal6.jpg"
   ];
 
-  List<dynamic> searchResults = []; // Store search results
+  // Stores search results
+  List<dynamic> searchResults = [];
 
+  // Fetches 6 random recipes to populate the default home page.
   Future<void> fetchRecipe() async {
+    //stores the database urls to grab a recipe from.
     Set<String> recipesUrl = {};
     recipeImages.shuffle();
 
+    // Randomly chosen recipe ids in the 10 000 recipes imported at startup.
     while (recipesUrl.length < 6) {
       recipesUrl
           .add('http://localhost:8080/recipes/${Random().nextInt(10000) + 1}');
     }
 
+    // Api call
     try {
       List<List<Map<String, dynamic>>> results = await Future.wait(
         recipesUrl.map((url) => getRecipe(url)),
@@ -72,7 +81,7 @@ class _HomePageState extends State<HomePage> {
                   child: Image.asset('assets/images/gptouille_logo.png'),
                 ),
 
-                // Title
+                // Page title
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
@@ -97,8 +106,10 @@ class _HomePageState extends State<HomePage> {
                         prefixIcon: Icon(Icons.search),
                       ),
                       onSubmitted: (query) async {
-                        FocusScope.of(context).unfocus(); // Close keyboard
+                        FocusScope.of(context)
+                            .unfocus(); // Close keyboard to avoid risks of error on submit
 
+                        // From the user prompt, returns the 6 first results from a semantic search in the database
                         List<dynamic> results =
                             await fetchSearchResults(query, 6);
                         if (!context.mounted) return;
@@ -149,7 +160,7 @@ class _HomePageState extends State<HomePage> {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: List.generate(
-                          recipes.take(3).length,
+                          recipes.take(3).length, // The first 3 elements
                           (index) => _buildRecipeCard(
                               recipes.take(3).elementAt(index), index),
                         ),
@@ -170,7 +181,7 @@ class _HomePageState extends State<HomePage> {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: List.generate(
-                          recipes.skip(3).take(3).length,
+                          recipes.skip(3).take(3).length, // The next 3 elements
                           (index) => _buildRecipeCard(
                               recipes.skip(3).take(3).elementAt(index),
                               index + 3),
@@ -187,7 +198,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Helper function to create RecipeCard widgets
+  // Helper function to create RecipeCard widgets based on recipeData obtaned from API call and missing info generated semi-randomly.
   Widget _buildRecipeCard(Map<String, dynamic> recipeData, int index) {
     return RecipeCard(
       title: recipeData['name'],

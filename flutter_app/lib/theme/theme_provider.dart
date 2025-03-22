@@ -8,7 +8,7 @@ class ThemeProvider extends ChangeNotifier {
 
   void setLightTheme() {
     _themeData = AppThemes.lightTheme;
-    notifyListeners(); // Rafraîchit l'interface
+    notifyListeners(); // Refresh interface.
   }
 
   void setDarkTheme() {

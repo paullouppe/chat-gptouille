@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class NavBar extends StatelessWidget {
-  final int selectedIndex; //index de l'item sélectionné
+  final int selectedIndex; // Selected item index.
   final Function(int)
-      onItemTapped; //fonction qui change la couleur selon l'item sélectionné
+      onItemTapped; // Function to change color of the tapped item.
 
   const NavBar(
       {super.key, required this.selectedIndex, required this.onItemTapped});
@@ -14,15 +14,14 @@ class NavBar extends StatelessWidget {
       currentIndex: selectedIndex,
       type: BottomNavigationBarType.fixed,
       onTap:
-          onItemTapped, //fonction qui va changer la couleur selon l'item tappé
+          onItemTapped, // Function to change theme depending on button pressed.
       backgroundColor: Theme.of(context).colorScheme.surface,
       selectedItemColor: Theme.of(context).colorScheme.primary,
       unselectedItemColor: Theme.of(context).colorScheme.inversePrimary,
       items: [
         BottomNavigationBarItem(icon: Icon(Icons.explore), label: "Explore"),
         BottomNavigationBarItem(icon: Icon(Icons.chat), label: "Chatbot"),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.add_box), label: "Add recipe"),
+        BottomNavigationBarItem(icon: Icon(Icons.add_box), label: "Add recipe"),
         BottomNavigationBarItem(
             icon: Icon(Icons.account_circle_outlined), label: "Profile"),
       ],

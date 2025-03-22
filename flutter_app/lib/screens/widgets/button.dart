@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class ButtonGeneric extends StatelessWidget {
-  
   final String content;
-  //Fonction qui est utilisé quand le bouton est cliqué
-  final VoidCallback pressedFunction; 
+  // Function called when button is used.
+  final VoidCallback pressedFunction;
 
-  const ButtonGeneric({super.key, required this.content, required this.pressedFunction });
+  const ButtonGeneric(
+      {super.key, required this.content, required this.pressedFunction});
 
   @override
   Widget build(BuildContext context) {

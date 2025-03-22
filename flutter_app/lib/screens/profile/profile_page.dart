@@ -10,8 +10,6 @@ import 'package:toggle_switch/toggle_switch.dart';
 import 'package:flutter_app/theme/theme_provider.dart';
 import 'package:flutter_app/theme/theme.dart';
 
-
-
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -20,20 +18,21 @@ class ProfilePage extends StatefulWidget {
 }
 
 class ProfilePageState extends State<ProfilePage> {
-  //Fonction qui indique ce qu'il faut faire si le bouton "sign out" est appuyé
+  // Function to manage the "sign out" button.
   void pressedDeco() {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     userProvider.logout();
     Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
     );
   }
+
   void pressedDelete() {
     _showConfirmationSuppression(context);
   }
 
-  // Liste des boutons avec chemins des icônes et textes
+  // Stores buttons with their icon file path and corresponding text.
   final List<Map<String, String>> buttonDiet = [
     {
       "icon": "assets/images/icon_carrot.png",
@@ -113,15 +112,14 @@ class ProfilePageState extends State<ProfilePage> {
         child: SingleChildScrollView(
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth:
-                  400, // Largeur maximale pour éviter l'étirement sur grands écrans
+              maxWidth: 400, // Max width to avoid stretching on large screens.
             ),
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Profil utilisateur
+                  // User profile
                   Row(
                     children: [
                       const Image(
@@ -150,7 +148,7 @@ class ProfilePageState extends State<ProfilePage> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Titres "Your preferences" et "Your diet"
+                  // Titles "Your preferences" and "Your diet"
                   Text(
                     'Your preferences',
                     style: Theme.of(context).textTheme.headlineMedium,
@@ -160,7 +158,7 @@ class ProfilePageState extends State<ProfilePage> {
 
                   const SizedBox(height: 10),
 
-                  //Liste des boutons scrollables
+                  // List of scrollables buttons
                   Wrap(
                     spacing: 10.0,
                     runSpacing: 10.0,
@@ -356,14 +354,12 @@ Future<void> deleteAccount(context) async {
   String apiUrl = "http://localhost:8080/users/${userProvider.id}";
   String accessToken = userProvider.accessToken;
   String result = await deleteAccountRequest(accessToken, apiUrl);
-  if (result=="success"){
+  if (result == "success") {
     _showSuccessSuppression(context);
-  }
-  else{
+  } else {
     AlertDialogProblem();
   }
 }
-
 
 void _showConfirmationSuppression(BuildContext context) {
   showDialog(
@@ -371,29 +367,29 @@ void _showConfirmationSuppression(BuildContext context) {
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text("Are you sure?"),
-        content: Text("Are you sure you want to delete your account ? This action is irreversible. You will loose all your data and recipes. Do you still want to delete ?"),
+        content: Text(
+            "Are you sure you want to delete your account ? This action is irreversible. You will loose all your data and recipes. Do you still want to delete ?"),
         actions: <Widget>[
           //Annuler l'action de suppression
           TextButton(
-          onPressed: () {
-            Navigator.of(context).pop(); //fermer l'alert dialog
-          },
-          child: const Text("No, I don't want to delete"),
-        ),
-        //Confirmer la suppression
-        TextButton(
-          onPressed: () {
-            deleteAccount(context); // Appeler la fonction de suppression
-            Navigator.of(context).pop(); // Fermer le dialog
-          },
-          child: const Text('Yes, delete my account.'),
-        ),
+            onPressed: () {
+              Navigator.of(context).pop(); //fermer l'alert dialog
+            },
+            child: const Text("No, I don't want to delete"),
+          ),
+          //Confirmer la suppression
+          TextButton(
+            onPressed: () {
+              deleteAccount(context); // Appeler la fonction de suppression
+              Navigator.of(context).pop(); // Fermer le dialog
+            },
+            child: const Text('Yes, delete my account.'),
+          ),
         ],
       );
     },
   );
 }
-
 
 void _showSuccessSuppression(BuildContext context) {
   showDialog(
@@ -401,21 +397,22 @@ void _showSuccessSuppression(BuildContext context) {
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text("Your account is successfully deleted"),
-        content: Text("Your account has been deleted. Don't hesitate to join us again by creating another account!"),
-        actions:[
-        TextButton(
-          onPressed: () {// Appeler la fonction de suppression
-            Navigator.of(context).pop(); // Fermer le dialog
-            Navigator.pushReplacement(
+        content: Text(
+            "Your account has been deleted. Don't hesitate to join us again by creating another account!"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              // Appeler la fonction de suppression
+              Navigator.of(context).pop(); // Fermer le dialog
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => SignUpPage()),
               ); // Aller vers la page de création de compte
-          },
-          child: const Text('OK'),
-        ),
+            },
+            child: const Text('OK'),
+          ),
         ],
       );
     },
   );
 }
-

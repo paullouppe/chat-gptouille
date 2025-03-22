@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'recipe_price_icon.dart';
 import 'recipe_tag.dart';
 
+// Widget to define recipe cards used on the home page.
 class RecipeCard extends StatelessWidget {
   final String title;
   final String imagePath;
@@ -11,7 +12,6 @@ class RecipeCard extends StatelessWidget {
   final int price;
   final double height;
 
-  // Constructor with required parameters
   const RecipeCard({
     super.key,
     required this.title,
@@ -36,7 +36,7 @@ class RecipeCard extends StatelessWidget {
             Expanded(
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  // Get the width of the card
+                  // Defines proportions
                   double cardWidth = constraints.maxWidth;
                   double cardHeight = constraints.maxHeight;
                   double iconSize = cardWidth * 0.06;
@@ -46,10 +46,10 @@ class RecipeCard extends StatelessWidget {
                   double favoriteSize = cardHeight * 0.14;
 
                   return
-                      // Superior section with background image
+                      // Superior section with background image.
                       Column(
                     children: [
-                      // Background Image
+                      // Background Image.
                       Expanded(
                         flex: 5,
                         child: Stack(
@@ -65,7 +65,7 @@ class RecipeCard extends StatelessWidget {
                               ),
                             ),
 
-                            // Button on top right
+                            // Favorite non functionnal button on top right.
                             Positioned(
                               top: 10,
                               right: 10,
@@ -85,7 +85,7 @@ class RecipeCard extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            // Small image on top left
+                            // Ratings on top left.
                             Positioned(
                               top: 15,
                               left: 10,
@@ -98,22 +98,20 @@ class RecipeCard extends StatelessWidget {
                                 ),
                                 child: Row(
                                   children: [
-                                    // First Element
+                                    // Rating grade.
                                     Text(
                                       ratings[0],
                                       style: Theme.of(context)
                                           .textTheme
                                           .headlineMedium,
                                     ),
-                                    // Second Element
+                                    // Star icon.
                                     Icon(Icons.star,
                                         color: Colors.yellow,
                                         size: iconSize / 1.5),
-                                    SizedBox(
-                                        width: 4), // Space between elements
-                                    SizedBox(
-                                        width: 4), // Space between elements
-                                    // Third Element
+                                    SizedBox(width: 4),
+                                    SizedBox(width: 4),
+                                    // Number of votes.
                                     Text(
                                       ratings[1],
                                       style: Theme.of(context)
@@ -143,9 +141,9 @@ class RecipeCard extends StatelessWidget {
                                       .textTheme
                                       .headlineMedium,
                                   overflow: TextOverflow
-                                      .ellipsis, // Ensures text doesn't wrap unnecessarily
+                                      .ellipsis, // Ensures text doesn't wrap unnecessarily.
                                   maxLines:
-                                      1, // Forces text to stay on a single line
+                                      1, // Forces text to stay on a single line.
                                 ),
                               )),
                               SizedBox(
@@ -153,6 +151,7 @@ class RecipeCard extends StatelessWidget {
                               ),
                               Row(
                                 children: [
+                                  // Use of list.generate() to build icons based on parameters.
                                   ...List.generate(
                                       3,
                                       (index) => Row(

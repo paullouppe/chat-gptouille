@@ -12,7 +12,7 @@ class UserProvider with ChangeNotifier {
   int get id => _id;
   bool get isLoggedIn => _isLoggedIn;
 
-  // Mettre à jour les données de l'utilisateur
+  // Updates user data.
   void setUser(String token, String name, int id) {
     _accessToken = token;
     _name = name;
@@ -23,18 +23,18 @@ class UserProvider with ChangeNotifier {
 
   bool isTokenExpired() {
     if (_accessToken.isEmpty) {
-      return true; // Si le token est vide, considérer qu'il est expiré
+      return true; // If token is empty, treats it as expired.
     }
 
-    // Utilisation de jwt_decoder pour vérifier si le token est expiré
+    // Use of jwt_decoder to check for token expiration.
     return JwtDecoder.isExpired(_accessToken);
   }
 
-  // Déconnecter l'utilisateur
+  // Logs out user.
   void logout() {
     _accessToken = '';
     _name = '';
-    _id=-1;
+    _id = -1;
     _isLoggedIn = false;
     notifyListeners();
   }
