@@ -120,7 +120,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
                       receivedMessageBodyTextStyle: Theme.of(context)
                           .textTheme
                           .bodyMedium!
-                          .copyWith(color: Colors.white),
+                          .copyWith(color: Colors.black),
                       sendButtonIcon: Icon(
                         Icons.send,
                         color: Theme.of(context).colorScheme.primary,
