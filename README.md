@@ -1,3 +1,9 @@
+## Videos
+#### Video d'installation
+[![Video d'installation](https://img.youtube.com/vi/0l54_wV_Rus/0.jpg)](https://www.youtube.com/watch?v=0l54_wV_Rus)
+#### Video de demo
+[![Video de demo](https://img.youtube.com/vi/-aVAwvgOiqI/0.jpg)](https://www.youtube.com/watch?v=-aVAwvgOiqI)
+
 ## Stack technologique
 
 - Langage de programmation : Python 3.10
