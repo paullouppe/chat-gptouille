@@ -288,11 +288,9 @@ class ProfilePageState extends State<ProfilePage> {
                         icons: [Icons.light_mode, Icons.dark_mode],
                         onToggle: (index) {
                           if (index == 0) {
-                            themeProvider
-                                .setLightTheme(); // Appliquer le thème clair
+                            themeProvider.setLightTheme(); // Apply light theme
                           } else {
-                            themeProvider
-                                .setDarkTheme(); // Appliquer le thème sombre
+                            themeProvider.setDarkTheme(); // Apply dark theme
                           }
                         },
                       ),
@@ -307,7 +305,7 @@ class ProfilePageState extends State<ProfilePage> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Bouton "Delete"
+                  // "Delete" button.
                   SizedBox(
                     width: 360.0,
                     height: 50.0,
@@ -316,21 +314,21 @@ class ProfilePageState extends State<ProfilePage> {
                       style: OutlinedButton.styleFrom(
                         foregroundColor: Theme.of(context)
                             .colorScheme
-                            .primary, // Texte orange
+                            .primary, // Orange text
                         side: BorderSide(
                             color: Theme.of(context).colorScheme.primary,
-                            width: 2), // Bordure orange
+                            width: 2), // Orange border
                         backgroundColor: Colors.transparent, // Fond blanc
                         shape: RoundedRectangleBorder(
                           borderRadius:
-                              BorderRadius.circular(15.0), // Bordures arrondies
+                              BorderRadius.circular(15.0), // Round borders
                         ),
                       ),
                       child: Text(
                         "Delete your account",
                         style: TextStyle(
                             fontSize: 20,
-                            fontWeight: FontWeight.bold), // Style du texte
+                            fontWeight: FontWeight.bold), // Text styling
                       ),
                     ),
                   )
@@ -365,18 +363,18 @@ void _showConfirmationSuppression(BuildContext context) {
         content: Text(
             "Are you sure you want to delete your account ? This action is irreversible. You will loose all your data and recipes. Do you still want to delete ?"),
         actions: <Widget>[
-          //Annuler l'action de suppression
+          // Cancel deletion
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop(); //fermer l'alert dialog
+              Navigator.of(context).pop(); // Cloes pop up
             },
             child: const Text("No, I don't want to delete"),
           ),
-          //Confirmer la suppression
+          // Confirm deletion
           TextButton(
             onPressed: () {
-              deleteAccount(context); // Appeler la fonction de suppression
-              Navigator.of(context).pop(); // Fermer le dialog
+              deleteAccount(context); // Call deleton window
+              Navigator.of(context).pop(); // Cloes pop up
             },
             child: const Text('Yes, delete my account.'),
           ),
@@ -397,12 +395,12 @@ void _showSuccessSuppression(BuildContext context) {
         actions: [
           TextButton(
             onPressed: () {
-              // Appeler la fonction de suppression
-              Navigator.of(context).pop(); // Fermer le dialog
+              // Call deletion function
+              Navigator.of(context).pop(); // Cloes pop up
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => SignUpPage()),
-              ); // Aller vers la page de création de compte
+              ); // Go to account creation page
             },
             child: const Text('OK'),
           ),

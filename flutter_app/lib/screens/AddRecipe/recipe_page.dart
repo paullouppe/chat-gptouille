@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/widgets/button.dart';
 import 'package:image_picker/image_picker.dart';
+import 'dart:developer';
 
 // Page to add a recipe.
 class AddRecipePage extends StatefulWidget {
@@ -110,7 +111,7 @@ class RecipePageState extends State<AddRecipePage> {
               DurationCounter(
                 initialMinutes: 10,
                 onChanged: (newDuration) {
-                  print("Durée changée: $newDuration min");
+                  log("Durée changée: $newDuration min");
                 },
               ),
               SizedBox(height: 40),
@@ -137,10 +138,10 @@ class ImagePickerWidget extends StatefulWidget {
   const ImagePickerWidget({super.key});
 
   @override
-  _ImagePickerWidgetState createState() => _ImagePickerWidgetState();
+  ImagePickerWidgetState createState() => ImagePickerWidgetState();
 }
 
-class _ImagePickerWidgetState extends State<ImagePickerWidget> {
+class ImagePickerWidgetState extends State<ImagePickerWidget> {
   File? _image;
   // Starts the file picker
   Future<void> _pickImage() async {
@@ -331,10 +332,10 @@ class DurationCounter extends StatefulWidget {
   });
 
   @override
-  _DurationCounterState createState() => _DurationCounterState();
+  DurationCounterState createState() => DurationCounterState();
 }
 
-class _DurationCounterState extends State<DurationCounter> {
+class DurationCounterState extends State<DurationCounter> {
   late int minutes;
 
   @override

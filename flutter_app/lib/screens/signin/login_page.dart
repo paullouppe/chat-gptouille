@@ -19,22 +19,22 @@ class LoginPage extends StatelessWidget {
   final TextEditingController mailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  //Fonction qui indique ce qu'il se passe quand on appuie sur le bouton "login"
+  // Function to manage the "login" button.
   void pressLogin(BuildContext context) async {
-    //1ère étape = récupérer les infos de mail et de password
+    // First, get email and password info
     String mail = mailController.text;
     String password = passwordController.text;
-    //puis donner à l'API
+    // Then call API
     Map<String, dynamic> userData = {
       "mail": mail,
       "password": password,
     };
     String apiUrl = "http://localhost:8080/users/login";
-    //si la réponse est bonne de l'API, on connecte et on passe à la page principale
+    // If API response is correct, log in ang go to the main page.
     String response = await postRequest(userData, apiUrl);
 
     if (response != "problem" && response != "Invalid email or password") {
-      //On retransforme le string en json
+      // Transforming the script back to json.
       Map<String, dynamic> userLoggedData = jsonDecode(response);
       // And instanciacing a provider to manage login information on all pages of the app.
       final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -45,11 +45,11 @@ class LoginPage extends StatelessWidget {
         MaterialPageRoute(builder: (context) => NavBarPages()),
       );
     }
-    //Si le mot de passe est incorrect, message d'alerte
+    // Error message if password is incorrect
     else if (response == "Invalid email or password") {
       _showTryAgainLogin(context);
     }
-    //s'il y a un problème, on demande de réessayer plus tard.
+    // If an issue arises, ask to try again later.
     else {
       AlertDialogProblem();
     }
@@ -59,16 +59,16 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-          //permet d'éviter les erreurs de dimension de l'écran.
+          // Avoid errors due to screen size.
           child: Column(
         children: [
           Image.asset(
             'assets/images/deco_login_signup.png',
-            width: double.infinity, //ça c'est pour étendre l'image
-            fit: BoxFit.cover, //Couvre tout l'écran
+            width: double.infinity, // extends image.
+            fit: BoxFit.cover, // covers the entire screen
           ),
           Column(children: [
-            //Texte de présentation de la page
+            // Page main text
             Text(
               'Login here',
               style: TextStyle(
@@ -94,7 +94,7 @@ class LoginPage extends StatelessWidget {
             ),
           ]),
           SizedBox(height: 50),
-          //Champs de texte pour la connexion
+          // Login text fields
           Column(children: [
             EmailInputWidget(
               controllerMail: mailController,
@@ -108,7 +108,7 @@ class LoginPage extends StatelessWidget {
               },
             ),
             SizedBox(height: 40),
-            //TextButton pour aller sur la page de création de compte
+            //TextButton to move to sign up page.
             TextButton(
               onPressed: () {
                 Navigator.push(

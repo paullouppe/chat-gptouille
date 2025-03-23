@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'dart:developer';
 
 //Stores API requests..
 
@@ -18,12 +19,12 @@ Future<String> postRequest(Map<String, dynamic> data, String apiUrl) async {
       //Il faut retourner un string tout en gardant une structure json correcte
       return jsonEncode(response.data);
     } else {
-      print("Réponse inattendue : ${response.data}");
+      log("Réponse inattendue : ${response.data}");
     }
     return response.data;
   } catch (e) {
     if (e is DioException) {
-      print("Erreur API : ${e.response?.statusCode} - ${e.response?.data}");
+      log("Erreur API : ${e.response?.statusCode} - ${e.response?.data}");
       // Indicates if email already exists.
       if (e.response?.statusCode == 400) {
         return "mail already exists";
@@ -32,7 +33,7 @@ Future<String> postRequest(Map<String, dynamic> data, String apiUrl) async {
       }
       return "problem";
     } else {
-      print("Erreur de connexion à l'API : $e");
+      log("Erreur de connexion à l'API : $e");
       return "problem";
     }
   }
@@ -62,11 +63,11 @@ Future<String> deleteAccountRequest(String accessToken, String apiUrl) async {
   } catch (e) {
     if (e is DioException) {
       // Manages Dio specific errors.
-      print("Erreur API : ${e.response?.statusCode} - ${e.response?.data}");
+      log("Erreur API : ${e.response?.statusCode} - ${e.response?.data}");
       return "Erreur de l'API lors de la suppression du compte";
     } else {
       // Manages generic errors.
-      print("Erreur de connexion : $e");
+      log("Erreur de connexion : $e");
       return "Erreur lors de la connexion à l'API";
     }
   }
@@ -91,7 +92,7 @@ Future<Stream<String>> streamRequest(
       throw Exception("Réponse inattendue : ${response.statusCode}");
     }
   } catch (e) {
-    print("Erreur lors de la requête en streaming : $e");
+    log("Erreur lors de la requête en streaming : $e");
     rethrow;
   }
 }
@@ -108,7 +109,7 @@ Future<List<Map<String, dynamic>>> getRecipe(String url) async {
       throw Exception('Failed to load recipes');
     }
   } catch (e) {
-    print('Error fetching recipes: $e');
+    log('Error fetching recipes: $e');
     return [];
   }
 }

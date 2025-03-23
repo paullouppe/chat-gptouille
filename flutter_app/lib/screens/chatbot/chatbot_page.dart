@@ -4,6 +4,7 @@ import 'package:flutter_app/services/requests.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:uuid/uuid.dart';
+import 'dart:developer';
 
 class ChatbotPage extends StatefulWidget {
   const ChatbotPage({super.key});
@@ -64,7 +65,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
         }
       });
     } catch (e) {
-      print("Error during chat response: $e");
+      log("Error during chat response: $e");
     }
   }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/recipe_card.dart';
 import 'package:flutter_app/services/requests.dart';
 import 'dart:math';
+import 'dart:developer' as dev;
 
 // Main page.
 class HomePage extends StatefulWidget {
@@ -30,7 +31,7 @@ class _HomePageState extends State<HomePage> {
 
   // Fetches 6 random recipes to populate the default home page.
   Future<void> fetchRecipe() async {
-    //stores the database urls to grab a recipe from.
+    // Stores the database urls to grab a recipe from.
     Set<String> recipesUrl = {};
     recipeImages.shuffle();
 
@@ -54,7 +55,7 @@ class _HomePageState extends State<HomePage> {
         });
       }
     } catch (e) {
-      print('Error fetching recipes: $e');
+      dev.log('Error fetching recipes: $e');
     }
   }
 
