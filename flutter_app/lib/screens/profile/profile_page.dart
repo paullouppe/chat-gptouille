@@ -72,32 +72,27 @@ class ProfilePageState extends State<ProfilePage> {
     {
       "icon": "assets/images/icon_microwave.png",
       "selectedIcon": "assets/images/icon_microwave_selected.png",
-      "text": "Vegetarian"
+      "text": "Microwave"
     },
     {
       "icon": "assets/images/icon_oven.png",
       "selectedIcon": "assets/images/icon_oven_selected.png",
-      "text": "Vegan"
+      "text": "Oven"
     },
     {
       "icon": "assets/images/icon_bake.png",
       "selectedIcon": "assets/images/icon_bake_selected.png",
-      "text": "Without pork"
+      "text": "Hotplate"
     },
     {
       "icon": "assets/images/icon_mixer.png",
       "selectedIcon": "assets/images/icon_mixer_selected.png",
-      "text": "Gluten free"
+      "text": "Mixer"
     },
     {
       "icon": "assets/images/icon_robot.png",
       "selectedIcon": "assets/images/icon_robot_selected.png",
-      "text": "Lactose free"
-    },
-    {
-      "icon": "assets/images/icon_fish.png",
-      "selectedIcon": "assets/images/icon_fish_selected.png",
-      "text": "Pescetarian"
+      "text": "Food processor"
     },
   ];
 
@@ -172,7 +167,7 @@ class ProfilePageState extends State<ProfilePage> {
                         },
                         child: Container(
                           width: 100,
-                          height: 80,
+                          height: 100,
                           decoration: BoxDecoration(
                             color: Colors.transparent,
                             border: Border.all(
@@ -190,8 +185,8 @@ class ProfilePageState extends State<ProfilePage> {
                                 selectedButtonsDiet[index]
                                     ? buttonDiet[index]["selectedIcon"]!
                                     : buttonDiet[index]["icon"]!,
-                                width: 40,
-                                height: 40,
+                                width: 50,
+                                height: 50,
                               ),
                               const SizedBox(height: 5),
                               Text(
@@ -232,7 +227,7 @@ class ProfilePageState extends State<ProfilePage> {
                         },
                         child: Container(
                           width: 100,
-                          height: 80,
+                          height: 100,
                           decoration: BoxDecoration(
                             color: Colors.transparent,
                             border: Border.all(

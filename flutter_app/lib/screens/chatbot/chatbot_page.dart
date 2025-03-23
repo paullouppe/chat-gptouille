@@ -17,7 +17,6 @@ class _ChatbotPageState extends State<ChatbotPage> {
   final _user = const types.User(id: '12345');
 
   void _handleSendPressed(types.PartialText message) async {
-    // Create and add the user's message.
     final userMessage = types.TextMessage(
       author: _user,
       createdAt: DateTime.now().millisecondsSinceEpoch,
@@ -29,25 +28,20 @@ class _ChatbotPageState extends State<ChatbotPage> {
       _messages.insert(0, userMessage);
     });
 
-    // Prepare the request payload.
     final requestData = {'user_message': message.text};
 
     try {
-      // Call the API and get a stream of response data.
       Stream<String> responseStream =
           await streamRequest(requestData, 'http://localhost:8080/chat/');
 
-      // This will accumulate the bot's reply.
       String accumulatedResponse = '';
-      // Listen to the stream and update the bot message as data arrives.
+
       responseStream.listen((data) {
         accumulatedResponse += data;
 
-        // Check if there's already a bot message we can update.
         final botMessageIndex = _messages.indexWhere(
             (msg) => msg.author.id == 'bot' && msg is types.TextMessage);
         if (botMessageIndex != -1) {
-          // Update the existing bot message.
           final updatedMessage = types.TextMessage(
             author: const types.User(id: 'bot'),
             createdAt: DateTime.now().millisecondsSinceEpoch,
@@ -58,7 +52,6 @@ class _ChatbotPageState extends State<ChatbotPage> {
             _messages[botMessageIndex] = updatedMessage;
           });
         } else {
-          // If no bot message exists yet, create one.
           final botMessage = types.TextMessage(
             author: const types.User(id: 'bot'),
             createdAt: DateTime.now().millisecondsSinceEpoch,
@@ -78,31 +71,69 @@ class _ChatbotPageState extends State<ChatbotPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(children: [
-        Chat(
-          messages: _messages,
-          onSendPressed: _handleSendPressed,
-          user: _user,
-          theme: DefaultChatTheme(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            primaryColor: Theme.of(context).colorScheme.primary,
-            secondaryColor: Theme.of(context).colorScheme.onSurface,
-            inputBackgroundColor: Theme.of(context).colorScheme.secondary,
-            sentMessageBodyTextStyle: Theme.of(context)
-                .textTheme
-                .bodyMedium!
-                .copyWith(color: Colors.white),
-            receivedMessageBodyTextStyle:
-                Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white),
-            sendButtonIcon: Icon(
-              Icons.send,
-              color: Theme.of(context).colorScheme.primary,
+      body: Stack(
+        children: [
+          Container(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 10,
+                ),
+                Image.asset('assets/images/chatbot.png', height: 150),
+                Text(
+                  'Bonjour !\nQue puis-je faire pour vous ?',
+                  style: Theme.of(context).textTheme.headlineLarge,
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  'Vous pouvez me demander des idées de recette, je serais ravi de vous répondre !',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                  textAlign: TextAlign.center,
+                ),
+                Expanded(
+                  child: Chat(
+                    messages: _messages,
+                    onSendPressed: _handleSendPressed,
+                    user: _user,
+                    theme: DefaultChatTheme(
+                      inputBackgroundColor:
+                          Theme.of(context).colorScheme.tertiary,
+                      inputTextColor: Theme.of(context).colorScheme.secondary,
+                      inputMargin: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 10),
+                      inputTextStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                      inputBorderRadius: const BorderRadius.horizontal(
+                        left: Radius.circular(15),
+                        right: Radius.circular(15),
+                      ),
+                      backgroundColor:
+                          Theme.of(context).scaffoldBackgroundColor,
+                      primaryColor: Theme.of(context).primaryColor,
+                      sentMessageBodyTextStyle: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(color: Colors.white),
+                      receivedMessageBodyTextStyle: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(color: Colors.white),
+                      sendButtonIcon: Icon(
+                        Icons.send,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            
           ),
-        ),
-        Positioned(top: 20.0, left: 20.0, child: ButtonReturn())
-      ]),
+          Positioned(top: 20.0, left: 20.0, child: ButtonReturn())
+        ],
+      ),
     );
   }
 }

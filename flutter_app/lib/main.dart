@@ -10,12 +10,8 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
-<<<<<<< HEAD
         ChangeNotifierProvider(
             create: (context) => UserProvider()), // Ajout de UserProvider
-=======
-        ChangeNotifierProvider(create: (context) => UserProvider()),
->>>>>>> 5e075e8e34ded340e185d3e7fca4bbb7d0403c66
       ],
       child: const MyApp(),
     ),
@@ -32,16 +28,10 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-<<<<<<< HEAD
       theme: themeProvider.themeData, // Applique le thème dynamique
       home: userProvider.isLoggedIn
           ? NavBarPages()
           : LoginPage(), // Page principale
-=======
-      theme: themeProvider.themeData, // Apply dynamic theme.
-      home:
-          userProvider.isLoggedIn ? NavBarPages() : LoginPage(), // First page.
->>>>>>> 5e075e8e34ded340e185d3e7fca4bbb7d0403c66
     );
   }
 }

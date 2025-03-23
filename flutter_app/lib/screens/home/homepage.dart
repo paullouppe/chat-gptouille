@@ -66,132 +66,143 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Logo
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 20),
-                  child: Image.asset('assets/images/gptouille_logo.png'),
-                ),
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Logo
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
+                child: Image.asset('assets/images/gptouille_logo.png'),
+              ),
 
-                // Page title
+              // Page title
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'What do you want to eat?',
+                  style: Theme.of(context).textTheme.headlineLarge,
+                ),
+              ),
+
+              // Search Bar
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 2.0),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.tertiary,
+                    borderRadius: BorderRadius.circular(8.0),
+                    border: Border.all(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .secondary, // Bordure grise
+                      width: 1.0, // Épaisseur de la bordure
+                    ),
+                  ),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: "Find a recipe...",
+                      hintStyle: TextStyle(
+                        color: Theme.of(context).textTheme.bodyMedium?.color,
+                      ),
+                      border: InputBorder.none,
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                    onSubmitted: (query) async {
+                      FocusScope.of(context)
+                          .unfocus(); // Close keyboard to avoid risks of error on submit
+
+                      // From the user prompt, returns the 6 first results from a semantic search in the database
+                      List<dynamic> results =
+                          await fetchSearchResults(query, 6);
+                      if (!context.mounted) return;
+
+                      setState(() {
+                        searchResults = results; // Update search results
+                      });
+                    },
+                  ),
+                ),
+              ),
+
+              // If searchResults is not empty, show search results
+              if (searchResults.isNotEmpty) ...[
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
-                    'What do you want to eat?',
+                    "Search Results",
                     style: Theme.of(context).textTheme.headlineLarge,
                   ),
                 ),
-
-                // Search Bar
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: "Find a recipe...",
-                        border: InputBorder.none,
-                        prefixIcon: Icon(Icons.search),
+                  padding: const EdgeInsets.all(16.0),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Column(
+                      children: List.generate(
+                        searchResults.length,
+                        (index) =>
+                            _buildRecipeCard(searchResults[index], index),
                       ),
-                      onSubmitted: (query) async {
-                        FocusScope.of(context)
-                            .unfocus(); // Close keyboard to avoid risks of error on submit
-
-                        // From the user prompt, returns the 6 first results from a semantic search in the database
-                        List<dynamic> results =
-                            await fetchSearchResults(query, 6);
-                        if (!context.mounted) return;
-
-                        setState(() {
-                          searchResults = results; // Update search results
-                        });
-                      },
                     ),
                   ),
                 ),
-
-                // If searchResults is not empty, show search results
-                if (searchResults.isNotEmpty) ...[
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      "Search Results",
-                      style: Theme.of(context).textTheme.headlineLarge,
-                    ),
+              ]
+              // Else, show the default layout
+              else ...[
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    "Recipes you might like",
+                    style: Theme.of(context).textTheme.headlineLarge,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Column(
-                        children: List.generate(
-                          searchResults.length,
-                          (index) =>
-                              _buildRecipeCard(searchResults[index], index),
-                        ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(14.0),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: List.generate(
+                        recipes.take(3).length, // The first 3 elements
+                        (index) => _buildRecipeCard(
+                            recipes.take(3).elementAt(index), index),
                       ),
                     ),
                   ),
-                ]
-                // Else, show the default layout
-                else ...[
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      "Recipes you might like",
-                      style: Theme.of(context).textTheme.headlineLarge,
-                    ),
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    "They also liked",
+                    style: Theme.of(context).textTheme.headlineLarge,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(14.0),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: List.generate(
-                          recipes.take(3).length, // The first 3 elements
-                          (index) => _buildRecipeCard(
-                              recipes.take(3).elementAt(index), index),
-                        ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(14.0),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: List.generate(
+                        recipes.skip(3).take(3).length, // The next 3 elements
+                        (index) => _buildRecipeCard(
+                            recipes.skip(3).take(3).elementAt(index),
+                            index + 3),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      "They also liked",
-                      style: Theme.of(context).textTheme.headlineLarge,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(14.0),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: List.generate(
-                          recipes.skip(3).take(3).length, // The next 3 elements
-                          (index) => _buildRecipeCard(
-                              recipes.skip(3).take(3).elementAt(index),
-                              index + 3),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ],
-            ),
+            ],
           ),
         ),
       ),
@@ -210,7 +221,8 @@ class _HomePageState extends State<HomePage> {
         "(${Random().nextInt(12) * 5 + 20}+)"
       ],
       price: Random().nextInt(3) + 1,
-      height: 425,
+      height: 310,
+      width: 260,
     );
   }
 }

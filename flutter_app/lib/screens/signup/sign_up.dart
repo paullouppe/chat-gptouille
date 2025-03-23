@@ -50,7 +50,7 @@ class SignUpPage extends StatelessWidget {
           child: Column(
         children: [
           Image.asset(
-            'images/deco_login_signup.png',
+            'assets/images/deco_login_signup.png',
             width: double.infinity, // covers the entire screen
             fit: BoxFit.cover,
           ),

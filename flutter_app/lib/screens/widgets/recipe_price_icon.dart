@@ -5,22 +5,29 @@ class PriceIcon extends StatelessWidget {
   final bool isFilled;
   final double iconSize;
 
-  const PriceIcon({super.key, required this.isFilled, required this.iconSize});
+  const PriceIcon({
+    super.key,
+    required this.isFilled,
+    required this.iconSize,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final filledBackground = Theme.of(context).primaryColor;
+    final emptyBackground = Theme.of(context).colorScheme.onSurface;
+    final filledIcon = Colors.white;
+    final emptyIcon = Theme.of(context).primaryColor;
+
     return Container(
       decoration: BoxDecoration(
-        color: isFilled
-            ? Theme.of(context).colorScheme.primary
-            : Theme.of(context).colorScheme.onSurface, // Background color
-        shape: BoxShape.circle, // Circular background
+        color: isFilled ? filledBackground : emptyBackground,
+        shape: BoxShape.circle,
       ),
-      padding: EdgeInsets.all(1.0),
+      padding: const EdgeInsets.all(4.0),
       child: Icon(
         Icons.euro,
         size: iconSize,
-        color: Theme.of(context).colorScheme.tertiary, // Icon color
+        color: isFilled ? filledIcon : emptyIcon,
       ),
     );
   }

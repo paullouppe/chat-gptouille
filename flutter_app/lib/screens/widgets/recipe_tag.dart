@@ -17,13 +17,13 @@ class RecipeTag extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 9),
       decoration: BoxDecoration(
-        color: Color.fromARGB(255, 212, 212, 212),
+        color: Theme.of(context).colorScheme.inversePrimary,
         borderRadius: BorderRadius.circular(borderRadius),
       ),
       child: Text(
         text,
         style: TextStyle(
-            color: const Color.fromARGB(255, 97, 97, 97),
+            color: Theme.of(context).colorScheme.secondary,
             fontSize: fontSize,
             fontWeight: FontWeight.w400),
       ),
