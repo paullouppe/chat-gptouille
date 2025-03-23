@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Price icon used on recipe cards.
 class PriceIcon extends StatelessWidget {
   final bool isFilled;
   final double iconSize;
@@ -15,7 +16,7 @@ class PriceIcon extends StatelessWidget {
             : Theme.of(context).colorScheme.onSurface, // Background color
         shape: BoxShape.circle, // Circular background
       ),
-      padding: EdgeInsets.all(1.0), // Adjust padding as needed
+      padding: EdgeInsets.all(1.0),
       child: Icon(
         Icons.euro,
         size: iconSize,

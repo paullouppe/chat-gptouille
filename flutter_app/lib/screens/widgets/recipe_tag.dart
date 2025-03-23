@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Recipe tags appearing on the bottom of recipe cards.
 class RecipeTag extends StatelessWidget {
   final String text;
   final double borderRadius;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Defines both themes.
 class AppThemes {
   static final ThemeData lightTheme = ThemeData(
     fontFamily: 'Poppins',

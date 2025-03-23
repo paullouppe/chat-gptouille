@@ -8,9 +8,7 @@ import 'package:provider/provider.dart';
 import 'widgets/navbar.dart';
 import 'home/homepage.dart';
 import 'profile/profile_page.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 
-//A NE PAS MODIFIER
 class NavBarPages extends StatefulWidget {
   const NavBarPages({super.key});
 
@@ -19,52 +17,49 @@ class NavBarPages extends StatefulWidget {
 }
 
 class NavBarPagesState extends State<NavBarPages> {
-
-
-  //Indice correspondant à l'item sélectionné dans la navigation bar
+  // Index of the selected item in the navbar
   int _selectedIndex = 0;
 
-  //Fonction qui change la couleur des items selon la sélection
+  // Changes colors of selected item.
   void _onItemTapped(int index) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
-    //Ici, on vérifie l'access token. S'il est expiré, on déconnecte l'utilisateur, sinon on le laisse aller sur la page
+    // Check for user access token: if expired, deny access.
     if (userProvider.isTokenExpired()) {
-      //on enlève toutes les infos recueillies sur l'utilisateur
+      // Removes all user info.
       userProvider.logout();
 
-      //on renvoie sur la page de login
+      // Return the user to login page.
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => LoginPage()),
       );
     } else {
-      //print("l'access token marche encore");
       setState(() {
-        // Si le token n'est pas expiré, on peut aller à l'autre page
+        // Else if token is valid, allow access.
         _selectedIndex = index;
       });
     }
   }
 
-  //Liste des pages qui sont accessibles via la navigation bar. 
+  // List of pages accessibles from the navbar.
   final List<Widget> _pages = [
     HomePage(),
     ChatbotPage(),
     AddRecipePage(),
     ProfilePage(),
-    
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_selectedIndex],
-      bottomNavigationBar: _selectedIndex==1? null :
-      NavBar(
-        selectedIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
-      ),
+      bottomNavigationBar: _selectedIndex == 1
+          ? null
+          : NavBar(
+              selectedIndex: _selectedIndex,
+              onItemTapped: _onItemTapped,
+            ),
     );
   }
 }

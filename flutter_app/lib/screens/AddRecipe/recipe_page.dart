@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/widgets/button.dart';
 import 'package:image_picker/image_picker.dart';
 
-//Page d'ajout de recette
+// Page to add a recipe.
 class AddRecipePage extends StatefulWidget {
   const AddRecipePage({super.key});
 
@@ -13,45 +13,41 @@ class AddRecipePage extends StatefulWidget {
 }
 
 class RecipePageState extends State<AddRecipePage> {
-  //Controller pour les textfields de description, ingrédient et quantité
+  //Controllers for ingredients, quantity and description TextFields.
   TextEditingController descriptionController = TextEditingController();
   TextEditingController ingrNameController = TextEditingController();
   TextEditingController quantiteController = TextEditingController();
 
-  //Liste des ingrédients ajoutés pour les utilisateurs 
+  // Stores ingredients added by users.
   List<Map<String, String>> ingredients = [];
 
-  //Fonction qui s'exécute quand on ajoute un ingrédient
+  // Function to add an ingredient
   void addIngredient() {
     String ingredientName = ingrNameController.text;
     String quantity = quantiteController.text;
 
-    //On ajoute uniquement si les champs ne sont pas vides
+    // Added only if fields are not empty.
     if (ingredientName.isNotEmpty && quantity.isNotEmpty) {
       setState(() {
         ingredients.add({'name': ingredientName, 'quantity': quantity});
       });
 
-      //On réinitialise les controllers pour obtenir de nouveaux ingrédients. 
+      // Reinitializing controllers to allow for new ingredients.
       ingrNameController.clear();
       quantiteController.clear();
     }
   }
 
-  //Fonction qui se lance pour ajouter une recette
-  void pressedAdd() {
-  }
-
+  // Function to add a recipe.
+  void pressedAdd() {}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: 
-      SingleChildScrollView(
-        child:
-        Padding(
+      body: SingleChildScrollView(
+        child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child:Column(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
@@ -77,29 +73,35 @@ class RecipePageState extends State<AddRecipePage> {
                 'Ingredients',
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               IngredientInput(
                 alimentController: ingrNameController,
                 quantiteController: quantiteController,
                 onAdd: addIngredient,
               ),
               SizedBox(height: 20),
-              //Ajout des ingrédients sous forme de tag. 
+              // Addition of ingredients as tags.
               Wrap(
                 spacing: 8.0,
                 runSpacing: 4.0,
                 children: ingredients.map((ingredient) {
                   return Chip(
-                    label: Text('${ingredient['name']} - ${ingredient['quantity']}',style: TextStyle(color:Colors.white)),
+                    label: Text(
+                        '${ingredient['name']} - ${ingredient['quantity']}',
+                        style: TextStyle(color: Colors.white)),
                     backgroundColor: Color(0xFFFE724C),
                     side: BorderSide(
-                      color: Color(0xFFFE724C), 
-                      width: 2.0, 
+                      color: Color(0xFFFE724C),
+                      width: 2.0,
                     ),
                   );
                 }).toList(),
               ),
-              SizedBox(width: 20,),
+              SizedBox(
+                width: 20,
+              ),
               Text(
                 'Time of preparation',
                 style: Theme.of(context).textTheme.headlineMedium,
@@ -113,15 +115,15 @@ class RecipePageState extends State<AddRecipePage> {
               ),
               SizedBox(height: 40),
               Center(
-              child: SizedBox(
-                width: 360.0,
-                height: 50.0,
-                child: ButtonGeneric(
-                  content: "Add the recipe", 
-                  pressedFunction: pressedAdd,
+                child: SizedBox(
+                  width: 360.0,
+                  height: 50.0,
+                  child: ButtonGeneric(
+                    content: "Add the recipe",
+                    pressedFunction: pressedAdd,
+                  ),
                 ),
-                ),
-              ),  
+              ),
             ],
           ),
         ),
@@ -130,15 +132,17 @@ class RecipePageState extends State<AddRecipePage> {
   }
 }
 
-//Récupération de l'image de la recette
+// Recipe image loader
 class ImagePickerWidget extends StatefulWidget {
+  const ImagePickerWidget({super.key});
+
   @override
   _ImagePickerWidgetState createState() => _ImagePickerWidgetState();
 }
 
 class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   File? _image;
-  //Lance le chercheur de fichier
+  // Starts the file picker
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -155,7 +159,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     return GestureDetector(
       onTap: _pickImage,
       child: Container(
-        width: double.infinity, 
+        width: double.infinity,
         height: 100,
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey),
@@ -177,17 +181,17 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   }
 }
 
-//Textfield de la description de recette
+// Textfield of recipe description
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
 
-  CustomTextField({Key? key, required this.controller}) : super(key: key);
+  const CustomTextField({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
-      maxLines: 4, // Permet plusieurs lignes de texte
+      maxLines: 4, // Allows for multiple lines of text
       decoration: InputDecoration(
         hintText: "Describe your recipe with all the steps...",
         hintStyle: TextStyle(
@@ -195,40 +199,42 @@ class CustomTextField extends StatelessWidget {
           fontSize: 14,
         ),
         filled: true,
-        fillColor: Colors.white, // Couleur de fond
+        fillColor: Colors.white, // Background collor
         contentPadding: EdgeInsets.all(12),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: Colors.red.shade100, width: 2), // Bordure rose clair
+          borderSide: BorderSide(
+              color: Colors.red.shade100, width: 2), // Light pink border
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: Color(0xFFFE724C), width: 2), // Bordure plus foncée au focus
+          borderSide: BorderSide(
+              color: Color(0xFFFE724C), width: 2), // Darker border on focus
         ),
       ),
     );
   }
 }
 
-//Textfields de la description des ingrédients
+// Textfields to describe ingredients
 class IngredientInput extends StatelessWidget {
   final TextEditingController alimentController;
   final TextEditingController quantiteController;
   final VoidCallback onAdd;
 
-  IngredientInput({
-    Key? key,
+  const IngredientInput({
+    super.key,
     required this.alimentController,
     required this.quantiteController,
     required this.onAdd,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        //Labels
+        // Labels
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4.0),
           child: Row(
@@ -242,7 +248,7 @@ class IngredientInput extends StatelessWidget {
         SizedBox(height: 5),
         Row(
           children: [
-            // Textfield pour les aliments
+            // Textfield for eatables
             Expanded(
               flex: 3,
               child: TextField(
@@ -250,21 +256,22 @@ class IngredientInput extends StatelessWidget {
                 decoration: InputDecoration(
                   hintText: "Ex : onion",
                   hintStyle: TextStyle(color: Colors.grey.shade400),
-                  
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.red.shade100, width: 2), 
+                    borderSide:
+                        BorderSide(color: Colors.red.shade100, width: 2),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Color(0xFFFE724C), width: 2), 
+                    borderSide: BorderSide(color: Color(0xFFFE724C), width: 2),
                   ),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 ),
               ),
             ),
             SizedBox(width: 10),
-            // Textfield pour la quantité
+            // Textfield for quantity
             Expanded(
               flex: 1,
               child: TextField(
@@ -276,11 +283,12 @@ class IngredientInput extends StatelessWidget {
                   hintStyle: TextStyle(color: Colors.grey.shade400),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.red.shade100, width: 2), 
+                    borderSide:
+                        BorderSide(color: Colors.red.shade100, width: 2),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Color(0xFFFE724C), width: 2), 
+                    borderSide: BorderSide(color: Color(0xFFFE724C), width: 2),
                   ),
                   contentPadding: EdgeInsets.symmetric(vertical: 10),
                 ),
@@ -290,7 +298,7 @@ class IngredientInput extends StatelessWidget {
         ),
         SizedBox(height: 10),
 
-        //Bouton pour l'ajout d'ingrédient
+        // Button to manage adding ingredients
         TextButton.icon(
           onPressed: onAdd,
           icon: Icon(Icons.add, color: Color(0xFFFE724C)),
@@ -311,16 +319,16 @@ class IngredientInput extends StatelessWidget {
   }
 }
 
-//Composant gérant la durée de réalisation de recette
+// Component to manage the recipe realization duration
 class DurationCounter extends StatefulWidget {
   final int initialMinutes;
   final ValueChanged<int> onChanged;
 
   const DurationCounter({
-    Key? key,
+    super.key,
     this.initialMinutes = 10,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   _DurationCounterState createState() => _DurationCounterState();
